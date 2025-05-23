@@ -26,11 +26,21 @@ CREATE TABLE orders (
 -- Sample Data
 INSERT INTO menus (name) VALUES ('ドリンク'), ('フード');
 
+-- ドリンク
 INSERT INTO menu_items (menu_id, name, price) VALUES
-  (1, 'コーラ', 300),
-  (1, 'オレンジジュース', 350),
-  (2, 'ハンバーガー', 700),
-  (2, 'ポテト', 400);
+  (1, 'アイスコーヒー', 280),
+  (1, 'ホットコーヒー', 280),
+  (1, 'ウーロン茶', 250),
+  (1, 'メロンソーダ', 300);
+
+-- フード
+INSERT INTO menu_items (menu_id, name, price) VALUES
+  (2, 'チーズバーガー', 750),
+  (2, 'カレーライス', 850),
+  (2, 'オムライス', 880),
+  (2, 'ミートソースパスタ', 900),
+  (2, 'グラタン', 830),
+  (2, 'サラダ', 400);
 
 INSERT INTO orders (menu_item_id, quantity) VALUES
   (1, 2),

@@ -8,6 +8,10 @@ services:
       - "8080:8080"
     depends_on:
       - db
+    command: ["sleep", "infinity"]
+    stdin_open: true
+    tty: true
+    init: true
 
   frontend:
     build: ./frontend
