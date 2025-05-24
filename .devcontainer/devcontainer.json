@@ -1,8 +1,9 @@
 {
 	"name": "OrderSystemDev",
 	"dockerComposeFile": ["../docker-compose.yml"],
-	"service": "backend",
+	"service": "frontend",
 	"workspaceFolder": "/workspace",
+	"postCreateCommand": "cd frontend && npm install",
 	"customizations": {
 	  "vscode": {
 		"settings": {

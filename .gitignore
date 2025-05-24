@@ -1,0 +1,53 @@
+# ----------------------------
+# Node.js / React / Vite
+# ----------------------------
+node_modules/
+dist/
+.vite/
+*.log
+
+# Vite preview cache
+.cache/
+
+# TypeScript
+*.tsbuildinfo
+
+# Environment variables
+.env*
+!.env.example
+
+# ----------------------------
+# macOS / エディタ設定
+# ----------------------------
+.DS_Store
+.vscode/
+
+# ----------------------------
+# Docker
+# ----------------------------
+**/.containerbuild/
+**/.docker/
+**/logs/
+docker-compose.override.yml
+
+# Docker volumes (名前付きボリューム以外)
+db-data/
+
+# ----------------------------
+# Frontend build artifacts (public may be used, so don’t exclude it blindly)
+frontend/public/vite.svg
+
+# ----------------------------
+# Go
+# ----------------------------
+*.out
+*.exe
+*.test
+*.mod
+*.sum
+coverage.out
+
+# ----------------------------
+# Others
+# ----------------------------
+document.txt
