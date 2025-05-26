@@ -5,6 +5,7 @@ import { MenuGrid } from "./components/MenuGrid";
 import { FooterBar } from "./components/FooterBar";
 import type { MenuItem, CartItem } from "./types/MenuItem";
 import { CartModal } from "./components/CartModal";
+import { SelectedItemModal } from "./components/SelectedItemModal";
 
 const TEST_MENU = [
   { id: 1, name: '唐揚げ', price: 500, imageUrl: '/img/karaage.jpg' },
@@ -18,6 +19,7 @@ function App() {
   const [cart, setCart] = useState<CartItem[]>([]); // カートの中身
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [total, setTotal] = useState<number>(0); // 注文確定分だけの合計
+  const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
 
   const addToCart = (item: MenuItem) => {
     setCart((prev) => {
@@ -39,12 +41,21 @@ function App() {
       <MenuGrid 
         items={TEST_MENU} 
         onAdd={(item) => addToCart(item)}
-        onConfirm={(item) => {
-          if (window.confirm(`${item.name} をカートに追加しますか？`)) {
-            addToCart(item);
-          }
-        }}
+        onConfirm={(item) => setSelectedItem(item)}
       />
+      {selectedItem && (
+        <SelectedItemModal
+          item={selectedItem}
+          onClose={() => setSelectedItem(null)}
+          onConfirm={(item, count) => {
+              for (let i = 0; i < count; i++) {
+                addToCart(item);
+              }
+              setSelectedItem(null);
+          }}
+        />
+      )}
+
       <FooterBar 
         total={total} 
         onCheckout={() => alert('会計へ')} 
