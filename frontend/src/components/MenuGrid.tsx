@@ -11,7 +11,7 @@ export function MenuGrid({
     onConfirm: (item: MenuItem) => void;
 }) {
     return (
-        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around' }}>
+        <div className="grid grid-cols-2 gap-x-2 gap-y-4 p-2">
             {items.map((item) => (
                 <MenuCard
                     key={item.id}
@@ -23,15 +23,3 @@ export function MenuGrid({
         </div>
     );
 }
-
-/*
-export function MenuGrid({ items, onAdd }: { items: MenuItem[]; onAdd: (id: number) => void }) {
-    return (
-        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around' }}>
-            {items.map(item => (
-                <MenuCard key={item.id} item={item} onAdd={() => onAdd(item.id)} />
-            ))}
-        </div>
-    );
-}
-*/

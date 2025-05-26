@@ -94,7 +94,7 @@ export function HomePage() {
     const totalHistoryAmount = orderHistory.reduce((orderSum, order) => {
         return orderSum + order.reduce((sum, item) => sum + item.price * item.count, 0);
     }, 0);
-    
+
     return (
         <div style={{ paddingBottom: '80px' }}>
           <div style={{ position: 'sticky', top: 0, background: '#fff', zIndex: 1000 }}>
@@ -132,12 +132,15 @@ export function HomePage() {
               </div>
             </section>
           )}
-    
-          <MenuGrid 
-            items={filteredMenu} 
-            onAdd={(item) => addToCart(item)}
-            onConfirm={(item) => setSelectedItem(item)}
-          />
+
+          <div className="w-full max-w-screen-md mx-auto">
+            <MenuGrid 
+                items={filteredMenu} 
+                onAdd={(item) => addToCart(item)}
+                onConfirm={(item) => setSelectedItem(item)}
+            />
+          </div>
+          
           {selectedItem && (
             <SelectedItemModal
               item={selectedItem}
