@@ -18,6 +18,11 @@ const TEST_MENU: MenuItem[] = [
     { id: 6, name: 'コーラ', price: 600, imageUrl: '/img/beer.jpg', category: 'ドリンク', isRecommended: false },
     { id: 7, name: 'ハイボール', price: 600, imageUrl: '/img/beer.jpg', category: 'ドリンク', isRecommended: true },
     { id: 8, name: '日本酒', price: 600, imageUrl: '/img/beer.jpg', category: 'ドリンク', isRecommended: false },
+    { id: 9, name: '梅酒', price: 600, imageUrl: '/img/beer.jpg', category: 'ドリンク', isRecommended: false },
+    { id: 10, name: 'あ', price: 600, imageUrl: '/img/beer.jpg', category: 'ドリンク', isRecommended: false },
+    { id: 11, name: 'い', price: 600, imageUrl: '/img/beer.jpg', category: 'ドリンク', isRecommended: false },
+    { id: 12, name: 'う', price: 600, imageUrl: '/img/beer.jpg', category: 'ドリンク', isRecommended: false },
+    { id: 13, name: 'え', price: 600, imageUrl: '/img/beer.jpg', category: 'ドリンク', isRecommended: false },
   ];
 
 export function HomePage() {
@@ -103,18 +108,45 @@ export function HomePage() {
             <Header />
             <Tabs selected={tab} onChange={setTab} />
           </div>
-    
-          <div
-              className="left-0 right-0 top-[200px] bottom-[60px] overflow-y-auto px-4"
-            >
-            <RecentOrders 
-              items={recentItems} 
+
+
+          <div className="fixed pt-[100px] left-0 right-0 z-40 bg-white px-4 shadow">
+            <RecentOrders
+              items={recentItems}
               onRepeat={(item) => addToCart(item)}
             />
-            <MenuGrid 
-              items={filteredMenu} 
-              onAdd={(item) => addToCart(item)}
-              onConfirm={(item) => setSelectedItem(item)}
+          </div>
+            {/*
+            <section>
+              <h3 className="text-lg font-semibold mb-2">最近の注文</h3>
+              <div className="overflow-x-auto">
+                <div className="flex gap-4 w-max">
+                  {recentItems.map((item) => (
+                    <div
+                      key={item.id}
+                      className="min-w-[120px] max-w-[110px] flex-shrink-0 border border-gray-300 rounded-lg p-2 bg-white"
+                    >
+                      <img src={item.imageUrl} alt={item.name} className="w-full rounded" />
+                      <div className="text-sm">{item.name}</div>
+                      <div className="font-bold text-sm">¥{item.price}</div>
+                      <button
+                        className="mt-1 w-full text-xs bg-blue-500 text-white py-1 rounded"
+                        onClick={() => addToCart(item)}
+                      >
+                        もう一度注文
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+            */} 
+          <div className="fixed top-[280px] bottom-[60px] left-0 right-0 overflow-y-auto px-4">
+            {/* 料理一覧：縦スクロールでカード表示 */}
+            <MenuGrid
+              items={filteredMenu}
+              onAdd={addToCart}
+              onConfirm={setSelectedItem}
             />
           </div>
                 
