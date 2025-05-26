@@ -6,6 +6,7 @@ import { FooterBar } from "../components/FooterBar";
 import type { MenuItem, CartItem } from "../types/MenuItem";
 import { CartModal } from "../components/CartModal";
 import { SelectedItemModal } from "../components/SelectedItemModal";
+import { RecentOrders } from "../components/RecentOrders";
 
 // サンプルデータ（DBから取得するように後で変更）
 const TEST_MENU: MenuItem[] = [
@@ -79,7 +80,7 @@ export function HomePage() {
             }
             return acc;
             }, []);
-            return unique.slice(0, 5);
+            return unique.slice(0, 3);
         });
 
         // 注文履歴に一回一回のオーダー単位で追加
@@ -94,53 +95,29 @@ export function HomePage() {
     const totalHistoryAmount = orderHistory.reduce((orderSum, order) => {
         return orderSum + order.reduce((sum, item) => sum + item.price * item.count, 0);
     }, 0);
-
+    
     return (
-        <div style={{ paddingBottom: '80px' }}>
-          <div style={{ position: 'sticky', top: 0, background: '#fff', zIndex: 1000 }}>
+        <div className="relative h-screen overflow-hidden">
+          
+          <div className="fixed top-0 left-0 right-0 bg-white z-50">
             <Header />
             <Tabs selected={tab} onChange={setTab} />
           </div>
     
-          {recentItems.length > 0 && (
-            <section style={{ padding: "1rem" }}>
-              <h3 style={{ marginBottom: "0.5rem" }}>最近の注文</h3>
-              <div style={{
-                display: 'flex',
-                overflowX: 'auto',
-                gap: '1rem',
-                paddingBottom: '0.5rem',
-              }}>
-                {recentItems.map(item => (
-                  <div
-                    key={item.id}
-                    style={{
-                      minWidth: '120px',
-                      border: '1px solid #ccc',
-                      borderRadius: '8px',
-                      padding: '0.5rem',
-                      flexShrink: 0,
-                      background: '#fff'
-                    }}
-                  >
-                    <img src={item.imageUrl} alt={item.name} style={{ width: '100%', borderRadius: '4px' }} />
-                    <div style={{ fontSize: '0.9rem' }}>{item.name}</div>
-                    <div style={{ fontWeight: 'bold' }}>¥{item.price}</div>
-                    <button onClick={() => addToCart(item)}>もう一度注文</button>
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
-
-          <div className="w-full max-w-screen-md mx-auto">
+          <div
+              className="left-0 right-0 top-[200px] bottom-[60px] overflow-y-auto px-4"
+            >
+            <RecentOrders 
+              items={recentItems} 
+              onRepeat={(item) => addToCart(item)}
+            />
             <MenuGrid 
-                items={filteredMenu} 
-                onAdd={(item) => addToCart(item)}
-                onConfirm={(item) => setSelectedItem(item)}
+              items={filteredMenu} 
+              onAdd={(item) => addToCart(item)}
+              onConfirm={(item) => setSelectedItem(item)}
             />
           </div>
-          
+                
           {selectedItem && (
             <SelectedItemModal
               item={selectedItem}
@@ -161,26 +138,18 @@ export function HomePage() {
             onHistoryOpen={() => setIsHistoryOpen(true)}
           />
 
-          <div style={{ position: 'sticky', top: 0, background: '#fff', zIndex: 1000 }}>
-            {isCartOpen && (
+          
+          {isCartOpen && (
+            <div className="fixed inset-0 z-[1000] bg-white">
               <CartModal
                 cart={cart}
                 onClose={() => setIsCartOpen(false)}
                 onIncrease={increaseCount}
                 onDecrease={decreaseCount}
                 onOrder={handleOrder}
-                /*
-                onOrder={() => {
-                  const orderTotal = cart.reduce((sum, item) => sum + item.price * item.count, 0);
-                  setTotal(prev => prev + orderTotal); // 注文金額を反映
-                  setCart([]);
-                  setIsCartOpen(false);
-                  alert("注文を確定しました！");
-                }}
-                */
               />
-            )}
-          </div>
+            </div>
+          )}
 
           {isHistoryOpen && (
             <div style={{

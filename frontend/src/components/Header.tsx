@@ -1,8 +1,11 @@
 
 export default function Header() {
     return (
-        <header style={{ padding: '1rem', fontSize: '1.5rem', fontWeight: 'bold' }}>
-            <h5 className="text-2xl text-red-500 font-bold">注文アプリ</h5>
-        </header>
+      <header className="bg-blue-600 text-white shadow-md px-4 py-3">
+        <h5 className="text-2xl font-semibold text-center tracking-wide">
+          ORDER SYSTEM
+        </h5>
+      </header>
     );
-}
+  }
+  
