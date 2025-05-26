@@ -3,6 +3,8 @@ export type MenuItem = {
     name: string;
     price: number;
     imageUrl: string;
+    category: 'フード' | 'ドリンク';
+    isRecommended: boolean;
   };
   
 export type CartItem = MenuItem & {
