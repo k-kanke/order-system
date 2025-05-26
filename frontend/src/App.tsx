@@ -7,9 +7,14 @@ import type { MenuItem, CartItem } from "./types/MenuItem";
 import { CartModal } from "./components/CartModal";
 import { SelectedItemModal } from "./components/SelectedItemModal";
 
+// サンプルデータ（DBから取得するように後で変更）
 const TEST_MENU = [
   { id: 1, name: '唐揚げ', price: 500, imageUrl: '/img/karaage.jpg' },
   { id: 2, name: 'ビール', price: 600, imageUrl: '/img/beer.jpg' },
+  { id: 3, name: 'スパ', price: 500, imageUrl: '/img/karaage.jpg' },
+  { id: 4, name: 'ポテト', price: 500, imageUrl: '/img/karaage.jpg' },
+  { id: 5, name: 'たこ焼き', price: 500, imageUrl: '/img/karaage.jpg' },
+  { id: 6, name: 'めん', price: 500, imageUrl: '/img/karaage.jpg' },
   // 他のアイテムも追加可能
 ];
 
@@ -48,8 +53,10 @@ function App() {
 
   return (
     <div style={{ paddingBottom: '80px' }}>
-      <Header />
-      <Tabs selected={tab} onChange={setTab} />
+      <div style={{ position: 'sticky', top: 0, background: '#fff', zIndex: 1000 }}>
+        <Header />
+        <Tabs selected={tab} onChange={setTab} />
+      </div>
       <MenuGrid 
         items={TEST_MENU} 
         onAdd={(item) => addToCart(item)}
@@ -73,7 +80,6 @@ function App() {
         onCheckout={() => alert('会計へ')} 
         onCartOpen={() => setIsCartOpen(true)}
       />
-
       {isCartOpen && (
         <CartModal
           cart={cart}
