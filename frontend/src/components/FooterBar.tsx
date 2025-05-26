@@ -3,10 +3,12 @@ export function FooterBar({
     total,
     onCheckout,
     onCartOpen, // ← カートボタン用
+    onHistoryOpen,
   }: {
     total: number;
     onCheckout: () => void;
     onCartOpen: () => void;
+    onHistoryOpen: () => void;
   }) {
     return (
       <footer
@@ -25,6 +27,7 @@ export function FooterBar({
       >
         <button onClick={onCartOpen}>🛒</button>
         <span>合計: ¥ {total}</span>
+        <button onClick={onHistoryOpen}>履歴</button>
         <button onClick={onCheckout}>会計</button>
       </footer>
     );
