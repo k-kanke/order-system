@@ -33,6 +33,18 @@ function App() {
     });
   };
 
+  const increaseCount = (id: number) => {
+    setCart(prev => prev.map(item =>
+      item.id === id ? {...item, count: item.count + 1} : item
+    ));
+  };
+
+  const decreaseCount = (id: number) => {
+    setCart(prev => prev
+      .map(item => item.id === id ? {...item, count: item.count - 1} : item)
+      .filter(item => item.count > 0)
+    );
+  };
 
   return (
     <div style={{ paddingBottom: '80px' }}>
@@ -66,6 +78,8 @@ function App() {
         <CartModal
           cart={cart}
           onClose={() => setIsCartOpen(false)}
+          onIncrease={increaseCount}
+          onDecrease={decreaseCount}
           onOrder={() => {
             const orderTotal = cart.reduce((sum, item) => sum + item.price * item.count, 0);
             setTotal(prev => prev + orderTotal); // 注文金額を反映
