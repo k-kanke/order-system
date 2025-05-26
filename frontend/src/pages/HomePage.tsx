@@ -34,6 +34,7 @@ export function HomePage() {
     const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
     const [recentItems, setRecentItems] = useState<MenuItem[]>([]); // 頼んだものを保存
     const [orderHistory, setOrderHistory] = useState<CartItem[][]>([]); // 注文ごとに配列で管理（注文履歴に表示する用）
+    const [showRecent, setShowRecent] = useState(false);
 
     useEffect(() => {
         document.body.style.overflow = isHistoryOpen ? 'hidden' : 'auto';
@@ -85,7 +86,7 @@ export function HomePage() {
             }
             return acc;
             }, []);
-            return unique.slice(0, 3);
+            return unique.slice(0, 5);
         });
 
         // 注文履歴に一回一回のオーダー単位で追加
@@ -107,15 +108,26 @@ export function HomePage() {
           <div className="fixed top-0 left-0 right-0 bg-white z-50">
             <Header />
             <Tabs selected={tab} onChange={setTab} />
+            {!showRecent && (
+              <button
+                className="ml-4 text-sm bg-blue-500 text-white px-3 py-1 rounded"
+                onClick={() => setShowRecent(true)}
+              >
+                最近の注文を表示
+              </button>
+            )}
           </div>
 
-
-          <div className="fixed pt-[100px] left-0 right-0 z-40 bg-white px-4 shadow">
+          {showRecent && (
+            <div className="fixed pt-[100px] left-0 right-0 z-40 bg-white px-4 shadow">
             <RecentOrders
               items={recentItems}
               onRepeat={(item) => addToCart(item)}
+              onClose={() => setShowRecent(false)}
             />
           </div>
+          )}
+
             {/*
             <section>
               <h3 className="text-lg font-semibold mb-2">最近の注文</h3>
@@ -141,7 +153,10 @@ export function HomePage() {
               </div>
             </section>
             */} 
-          <div className="fixed top-[280px] bottom-[60px] left-0 right-0 overflow-y-auto px-4">
+          <div 
+            className="fixed bottom-[60px] left-0 right-0 overflow-y-auto px-4"
+            style={{ top: showRecent ? "280px" : "150px" }}
+          >
             {/* 料理一覧：縦スクロールでカード表示 */}
             <MenuGrid
               items={filteredMenu}
@@ -164,7 +179,8 @@ export function HomePage() {
           )}
     
           <FooterBar 
-            total={total} 
+            total={total}
+            cart={cart} // カートに何か入っている時はバッジ表示。カートに入ってるかどうか確認用 
             onCheckout={() => alert('会計へ')} 
             onCartOpen={() => setIsCartOpen(true)}
             onHistoryOpen={() => setIsHistoryOpen(true)}
