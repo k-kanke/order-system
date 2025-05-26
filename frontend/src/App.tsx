@@ -3,6 +3,8 @@ import Header from "./components/Header";
 import { Tabs } from "./components/Tabs";
 import { MenuGrid } from "./components/MenuGrid";
 import { FooterBar } from "./components/FooterBar";
+import type { MenuItem, CartItem } from "./types/MenuItem";
+import { CartModal } from "./components/CartModal";
 
 const TEST_MENU = [
   { id: 1, name: '唐揚げ', price: 500, imageUrl: '/img/karaage.jpg' },
@@ -13,19 +15,55 @@ const TEST_MENU = [
 
 function App() {
   const [tab, setTab] = useState<'おすすめ' | '全て' | 'フード' | 'ドリンク'>('おすすめ');
-  const [total, setTotal] = useState(0);
+  const [cart, setCart] = useState<CartItem[]>([]); // カートの中身
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [total, setTotal] = useState<number>(0); // 注文確定分だけの合計
 
-  const handleAdd = (id: number) => {
-    const item = TEST_MENU.find(m => m.id === id);
-    if (item) setTotal(prev => prev + item.price);
+  const addToCart = (item: MenuItem) => {
+    setCart((prev) => {
+      const exiting = prev.find((c) => c.id === item.id);
+      if (exiting) {
+        return prev.map((c) =>
+          c.id === item.id ? {...c, count: c.count + 1} : c
+        );
+      }
+      return [...prev, {...item, count: 1 }];
+    });
   };
+
 
   return (
     <div style={{ paddingBottom: '80px' }}>
       <Header />
       <Tabs selected={tab} onChange={setTab} />
-      <MenuGrid items={TEST_MENU} onAdd={handleAdd} />
-      <FooterBar total={total} onCheckout={() => alert('会計へ')} />
+      <MenuGrid 
+        items={TEST_MENU} 
+        onAdd={(item) => addToCart(item)}
+        onConfirm={(item) => {
+          if (window.confirm(`${item.name} をカートに追加しますか？`)) {
+            addToCart(item);
+          }
+        }}
+      />
+      <FooterBar 
+        total={total} 
+        onCheckout={() => alert('会計へ')} 
+        onCartOpen={() => setIsCartOpen(true)}
+      />
+
+      {isCartOpen && (
+        <CartModal
+          cart={cart}
+          onClose={() => setIsCartOpen(false)}
+          onOrder={() => {
+            const orderTotal = cart.reduce((sum, item) => sum + item.price * item.count, 0);
+            setTotal(prev => prev + orderTotal); // 注文金額を反映
+            setCart([]);
+            setIsCartOpen(false);
+            alert("注文を確定しました！");
+          }}
+        />
+      )}
     </div>
   );
 }

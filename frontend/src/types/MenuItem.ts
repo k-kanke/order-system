@@ -5,3 +5,6 @@ export type MenuItem = {
     imageUrl: string;
   };
   
+export type CartItem = MenuItem & {
+  count: number;
+};
