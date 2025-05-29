@@ -33,7 +33,7 @@ export function FooterBar({
         <button className="relative" onClick={onCartOpen}>
           🛒
           {cartCount > 0 && (
-            <span className="absolute -top-1 -right-1 bg-red-500 rounded-full w-3 h-3 flex items-center justify-center" />
+            <span className="absolute -top-1 -right-1 bg-red-500 rounded-full w-2 h-2 flex items-center justify-center" />
           )}
         </button>
         <span>合計: ¥ {total}</span>

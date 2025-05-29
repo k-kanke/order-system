@@ -10,7 +10,7 @@ export function RecentOrders({
   onRepeat: (item: MenuItem) => void;
   onClose: () => void;
 }) {
-  if (items.length === 0) return null;
+  // if (items.length === 0) return null;
 
   return (
     <section className="px-4 py-2 max-w-screen-md mx-auto">
@@ -31,8 +31,8 @@ export function RecentOrders({
           onClick={onClose}
           className="text-xs text-blue-500 hover:underline flex items-center justify-end gap-1"
         >
-          <span className="text-lg">⬆</span>
-          <span>非表示</span>
+          <span className="text-lg">▲</span>
+          {/*<span>非表示</span>*/}
         </button>
       </div>
     </section>
