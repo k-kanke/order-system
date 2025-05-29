@@ -155,7 +155,13 @@ export function HomePage() {
             */} 
           <div 
             className="fixed bottom-[60px] left-0 right-0 overflow-y-auto px-4"
-            style={{ top: showRecent ? "280px" : "150px" }}
+            style={{ 
+              top: showRecent 
+                ? recentItems.length === 0
+                  ? "180px"
+                  : "280px" 
+                : "150px",
+            }}
           >
             {/* 料理一覧：縦スクロールでカード表示 */}
             <MenuGrid
