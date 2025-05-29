@@ -16,7 +16,7 @@ export function HomePage() {
     const [isHistoryOpen, setIsHistoryOpen] = useState(false);
     const [total, setTotal] = useState<number>(0); // 注文確定分だけの合計
     const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
-    const [recentItems, setRecentItems] = useState<MenuItem[]>([]); // 頼んだものを保存
+    const [recentItems, setRecentItems] = useState<CartItem[]>([]); // 頼んだものを保存
     const [orderHistory, setOrderHistory] = useState<CartItem[][]>([]); // 注文ごとに配列で管理（注文履歴に表示する用）
     const [showRecent, setShowRecent] = useState(false);
 
@@ -79,7 +79,7 @@ export function HomePage() {
         // recentItemsにカートを統合
         setRecentItems(prev => {
             const combined = [...cart, ...prev];
-            const unique = combined.reduce<MenuItem[]>((acc, item) => {
+            const unique = combined.reduce<CartItem[]>((acc, item) => {
             if (!acc.find(i => i.id === item.id)) {
                 acc.push({ ...item });
             }
@@ -122,8 +122,7 @@ export function HomePage() {
             <RecentOrders
               items={recentItems}
               onRepeat={(item) => {
-                const defaultSize = item.sizes[1]; // 注文履歴から追加はデフォルトでMサイズに設定
-                addToCart(item, defaultSize);
+                addToCart(item, item.selectedSize);
               }}
               onClose={() => setShowRecent(false)}
             />
@@ -169,7 +168,7 @@ export function HomePage() {
             <MenuGrid
               items={filteredMenu}
               onAdd={(item) => {
-                const defaultSize = item.sizes[1]; // メニュー表からのワンタップ追加はデフォルトでMサイズに設定
+                const defaultSize = item.sizes[0]; 
                 addToCart(item, defaultSize);
               }}
               onConfirm={setSelectedItem}

@@ -13,7 +13,7 @@ export function CartModal({
     onIncrease: (id: number) => void;
     onDecrease: (id: number) => void;
 }) {
-    const total = cart.reduce((sum, item) => sum + item.price * item.count, 0);
+    const total = cart.reduce((sum, item) => sum + item.selectedSize.price * item.count, 0);
 
     return (
         <div style={{
@@ -27,14 +27,14 @@ export function CartModal({
                 {cart.map(item => (
                     <li key={item.id} style={{ marginBottom: '1rem' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <span>{item.name}</span>
+                        <span>{item.name}({item.selectedSize.label})</span>
                         <div>
                             <button onClick={() => onDecrease(item.id)}>−</button>
                             <span style={{ margin: '0 1rem' }}>{item.count}</span>
                             <button onClick={() => onIncrease(item.id)}>＋</button>
                         </div>
                         </div>
-                        <p>小計: ¥{item.price * item.count}</p>
+                        <p>小計: ¥{item.selectedSize.price * item.count}</p>
                     </li>
                     ))}
               </ul>

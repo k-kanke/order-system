@@ -11,7 +11,7 @@ export function SelectedItemModal({
     onConfirm: (item: MenuItem, count: number, selectedSize: { label: string; price: number }) => void;
 }) {
     const [count, setCount] = useState(1);
-    const [selectedSize, setSelectedSize] = useState(item.sizes[1] ?? item.sizes[0]); // Mサイズを優先し、なければ先頭
+    const [selectedSize, setSelectedSize] = useState(item.sizes[0]); 
 
     return (
         <div style={{

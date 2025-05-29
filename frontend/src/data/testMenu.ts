@@ -31,8 +31,8 @@ export const TEST_MENU: MenuItem[] = [
     category: 'フード',
     isRecommended: false,
     sizes: [
-      { label: '大', price: 300 },
-      { label: '中', price: 150 },
+        { label: '中', price: 150 },
+        { label: '大', price: 300 },
     ],
   },
   {

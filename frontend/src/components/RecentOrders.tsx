@@ -1,13 +1,13 @@
-import type { MenuItem } from "../types/MenuItem";
 import { RecentOrderCard } from "./RecentOrderCard"; // 追加
+import type { CartItem } from "../types/MenuItem";
 
 export function RecentOrders({
   items,
   onRepeat,
   onClose,
 }: {
-  items: MenuItem[];
-  onRepeat: (item: MenuItem) => void;
+  items: CartItem[];
+  onRepeat: (item: CartItem) => void;
   onClose: () => void;
 }) {
   // if (items.length === 0) return null;

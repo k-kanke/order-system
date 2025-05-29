@@ -32,11 +32,7 @@ export function MenuCard({
         <div className="p-2">
           <h4 className="text-base font-bold">{item.name}</h4>
           <p className="text-sm text-gray-600">
-            ¥ {
-              item.sizes.find(size => size.label === "M")?.price
-              ?? item.sizes[0]?.price
-              ?? "未定"
-            }
+            ¥ {Math.min(...item.sizes.map(size => size.price))}
           </p>
           <button 
             onClick={(e) => { 

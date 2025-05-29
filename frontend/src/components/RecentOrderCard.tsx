@@ -1,11 +1,11 @@
-import type { MenuItem } from "../types/MenuItem";
+import type { CartItem } from "../types/MenuItem";
 
 export function RecentOrderCard({
   item,
   onRepeat,
 }: {
-  item: MenuItem;
-  onRepeat: (item: MenuItem) => void;
+  item: CartItem;
+  onRepeat: (item: CartItem) => void;
 }) {
   return (
     <div
