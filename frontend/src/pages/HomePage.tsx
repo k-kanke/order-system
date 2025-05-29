@@ -7,23 +7,7 @@ import type { MenuItem, CartItem } from "../types/MenuItem";
 import { CartModal } from "../components/CartModal";
 import { SelectedItemModal } from "../components/SelectedItemModal";
 import { RecentOrders } from "../components/RecentOrders";
-
-// サンプルデータ（DBから取得するように後で変更）
-const TEST_MENU: MenuItem[] = [
-    { id: 1, name: '唐揚げ', price: 500, imageUrl: '/img/karaage.jpg', category: 'フード', isRecommended: true },
-    { id: 2, name: 'ビール', price: 600, imageUrl: '/img/beer.jpg', category: 'ドリンク', isRecommended: true },
-    { id: 3, name: '枝豆', price: 300, imageUrl: '/img/edamame.jpg', category: 'フード', isRecommended: false },
-    { id: 4, name: '烏龍茶', price: 400, imageUrl: '/img/oolong.jpg', category: 'ドリンク', isRecommended: false },
-    { id: 5, name: 'レモンサワー', price: 600, imageUrl: '/img/beer.jpg', category: 'ドリンク', isRecommended: false },
-    { id: 6, name: 'コーラ', price: 600, imageUrl: '/img/beer.jpg', category: 'ドリンク', isRecommended: false },
-    { id: 7, name: 'ハイボール', price: 600, imageUrl: '/img/beer.jpg', category: 'ドリンク', isRecommended: true },
-    { id: 8, name: '日本酒', price: 600, imageUrl: '/img/beer.jpg', category: 'ドリンク', isRecommended: false },
-    { id: 9, name: '梅酒', price: 600, imageUrl: '/img/beer.jpg', category: 'ドリンク', isRecommended: false },
-    { id: 10, name: 'あ', price: 600, imageUrl: '/img/beer.jpg', category: 'ドリンク', isRecommended: false },
-    { id: 11, name: 'い', price: 600, imageUrl: '/img/beer.jpg', category: 'ドリンク', isRecommended: false },
-    { id: 12, name: 'う', price: 600, imageUrl: '/img/beer.jpg', category: 'ドリンク', isRecommended: false },
-    { id: 13, name: 'え', price: 600, imageUrl: '/img/beer.jpg', category: 'ドリンク', isRecommended: false },
-  ];
+import { TEST_MENU } from "../data/testMenu";
 
 export function HomePage() {
     const [tab, setTab] = useState<'おすすめ' | '全て' | 'フード' | 'ドリンク'>('おすすめ');
@@ -47,17 +31,32 @@ export function HomePage() {
     return true; // 全て
     });
 
-    const addToCart = (item: MenuItem) => {
-    // カート更新
-    setCart((prev) => {
-        const exiting = prev.find((c) => c.id === item.id);
-        if (exiting) {
-        return prev.map((c) =>
-            c.id === item.id ? {...c, count: c.count + 1} : c
-        );
-        }
-        return [...prev, {...item, count: 1 }];
-    });
+    const addToCart = (item: MenuItem, selectedSize: {label: string; price: number}) => {
+      // カート更新
+      setCart((prev) => {
+          const exiting = prev.find(
+            (c) => c.id === item.id && c.selectedSize.label === selectedSize.label
+          );
+          if (exiting) {
+            return prev.map((c) =>
+              c.id === item.id && c.selectedSize.label === selectedSize.label
+                ? { ...c, count: c.count + 1 }
+                : c
+            );
+          }
+          return [
+            ...prev, 
+            {
+              id: item.id,
+              name: item.name,
+              imageUrl: item.imageUrl,
+              category: item.category,
+              isRecommended: item.isRecommended,
+              selectedSize,
+              count: 1,
+            } as CartItem,
+          ];
+      });
     };
 
     const increaseCount = (id: number) => {
@@ -74,7 +73,7 @@ export function HomePage() {
     };
 
     const handleOrder = () => {
-        const orderTotal = cart.reduce((sum, item) => sum + item.price * item.count, 0);
+        const orderTotal = cart.reduce((sum, item) => sum + item.selectedSize.price * item.count, 0);
         setTotal(prev => prev + orderTotal); // 注文金額を反映
 
         // recentItemsにカートを統合
@@ -99,7 +98,7 @@ export function HomePage() {
 
     // お支払い金額（合計）を計算
     const totalHistoryAmount = orderHistory.reduce((orderSum, order) => {
-        return orderSum + order.reduce((sum, item) => sum + item.price * item.count, 0);
+        return orderSum + order.reduce((sum, item) => sum + item.selectedSize.price * item.count, 0);
     }, 0);
     
     return (
@@ -122,7 +121,10 @@ export function HomePage() {
             <div className="fixed pt-[100px] left-0 right-0 z-40 bg-white px-4 shadow">
             <RecentOrders
               items={recentItems}
-              onRepeat={(item) => addToCart(item)}
+              onRepeat={(item) => {
+                const defaultSize = item.sizes[1]; // 注文履歴から追加はデフォルトでMサイズに設定
+                addToCart(item, defaultSize);
+              }}
               onClose={() => setShowRecent(false)}
             />
           </div>
@@ -166,7 +168,10 @@ export function HomePage() {
             {/* 料理一覧：縦スクロールでカード表示 */}
             <MenuGrid
               items={filteredMenu}
-              onAdd={addToCart}
+              onAdd={(item) => {
+                const defaultSize = item.sizes[1]; // メニュー表からのワンタップ追加はデフォルトでMサイズに設定
+                addToCart(item, defaultSize);
+              }}
               onConfirm={setSelectedItem}
             />
           </div>
@@ -175,11 +180,27 @@ export function HomePage() {
             <SelectedItemModal
               item={selectedItem}
               onClose={() => setSelectedItem(null)}
-              onConfirm={(item, count) => {
-                  for (let i = 0; i < count; i++) {
-                    addToCart(item);
+              onConfirm={(item, count, selectedSize) => {
+                addToCart(item, selectedSize);
+                setCart(prev => {
+                  const existing = prev.find(c => c.id === item.id && c.selectedSize.label === selectedSize.label);
+                  if (existing) {
+                    return prev.map(c =>
+                      c.id === item.id && c.selectedSize.label === selectedSize.label
+                        ? { ...c, count: c.count + count }
+                        : c
+                    );
                   }
-                  setSelectedItem(null);
+                  return [
+                    ...prev,
+                    {
+                      ...item,
+                      selectedSize,
+                      count,
+                    } as CartItem,
+                  ];
+                });
+                setSelectedItem(null);
               }}
             />
           )}
@@ -221,7 +242,7 @@ export function HomePage() {
                 {orderHistory.length === 0 && <p>まだ注文はありません。</p>}
 
                 {orderHistory.map((order, index) => {
-                    const orderTotal = order.reduce((sum, item) => sum + item.price * item.count, 0);
+                    const orderTotal = order.reduce((sum, item) => sum + item.selectedSize.price * item.count, 0);
                     return (
                         <div key={index} style={{
                         border: '1px solid #ccc',
@@ -238,8 +259,8 @@ export function HomePage() {
                             marginBottom: '0.25rem'
                             }}>
                             <span>{item.name}</span>
-                            <span>¥{item.price} × {item.count}</span>
-                            <span>¥{item.price * item.count}</span>
+                            <span>¥{item.selectedSize.price} × {item.count}</span>
+                            <span>¥{item.selectedSize.price * item.count}</span>
                             </div>
                         ))}
                         <hr style={{ margin: '0.5rem 0' }} />
