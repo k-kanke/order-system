@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Header from "../components/Header";
 import { Tabs } from "../components/Tabs";
 import { MenuGrid } from "../components/MenuGrid";
@@ -19,6 +19,46 @@ export function HomePage() {
     const [recentItems, setRecentItems] = useState<CartItem[]>([]); // 頼んだものを保存
     const [orderHistory, setOrderHistory] = useState<CartItem[][]>([]); // 注文ごとに配列で管理（注文履歴に表示する用）
     const [showRecent, setShowRecent] = useState(false);
+    const [showFloatingBar, setShowFloatingBar] = useState(true);
+
+    const scrollTimeoutRef = useRef<number | null>(null); 
+    const menuGridRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+      const handleScroll = () => {
+        // スクロール中：タブを非表示
+        if (showFloatingBar) {
+          setShowFloatingBar(false);
+        }
+
+        // タイマーをリセット
+        if (scrollTimeoutRef.current) {
+          clearTimeout(scrollTimeoutRef.current);
+        }
+
+        // スクロール停止時にタブを再表示
+        scrollTimeoutRef.current = setTimeout(() => {
+          setShowFloatingBar(true);
+        }, 300); // 300ms後に「停止」と見なす
+      };
+
+      const currentMenuGridRef = menuGridRef.current;
+      if (currentMenuGridRef) {
+        currentMenuGridRef.addEventListener("scroll", handleScroll);
+      }
+
+      // window.addEventListener("scroll", handleScroll);
+
+      return () => {
+        if (currentMenuGridRef) {
+          currentMenuGridRef.removeEventListener("scroll", handleScroll);
+        }
+        // window.removeEventListener("scroll", handleScroll);
+        if (scrollTimeoutRef.current) {
+          clearTimeout(scrollTimeoutRef.current);
+        }
+      };
+    }, [showFloatingBar]);
 
     useEffect(() => {
         document.body.style.overflow = isHistoryOpen ? 'hidden' : 'auto';
@@ -129,39 +169,16 @@ export function HomePage() {
           </div>
           )}
 
-            {/*
-            <section>
-              <h3 className="text-lg font-semibold mb-2">最近の注文</h3>
-              <div className="overflow-x-auto">
-                <div className="flex gap-4 w-max">
-                  {recentItems.map((item) => (
-                    <div
-                      key={item.id}
-                      className="min-w-[120px] max-w-[110px] flex-shrink-0 border border-gray-300 rounded-lg p-2 bg-white"
-                    >
-                      <img src={item.imageUrl} alt={item.name} className="w-full rounded" />
-                      <div className="text-sm">{item.name}</div>
-                      <div className="font-bold text-sm">¥{item.price}</div>
-                      <button
-                        className="mt-1 w-full text-xs bg-blue-500 text-white py-1 rounded"
-                        onClick={() => addToCart(item)}
-                      >
-                        もう一度注文
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </section>
-            */} 
           <div 
-            className="fixed bottom-[60px] left-0 right-0 overflow-y-auto px-4"
+            ref={menuGridRef}
+            className="fixed left-0 right-0 overflow-y-auto px-4"
             style={{ 
               top: showRecent 
                 ? recentItems.length === 0
                   ? "180px"
                   : "280px" 
                 : "150px",
+              bottom: showFloatingBar ? "60px" : "0px",
             }}
           >
             {/* 料理一覧：縦スクロールでカード表示 */}
@@ -203,14 +220,20 @@ export function HomePage() {
               }}
             />
           )}
-    
-          <FooterBar 
+
+          <div
+            className={`fixed bottom-0 left-0 right-0 z-50 transition-all duration-300 ${
+              showFloatingBar ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+            }`}
+          >
+            <FooterBar 
             total={total}
             cart={cart} // カートに何か入っている時はバッジ表示。カートに入ってるかどうか確認用 
             onCheckout={() => alert('会計へ')} 
             onCartOpen={() => setIsCartOpen(true)}
             onHistoryOpen={() => setIsHistoryOpen(true)}
-          />
+            />
+          </div>
 
           
           {isCartOpen && (
