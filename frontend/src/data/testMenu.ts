@@ -1,4 +1,4 @@
-import type { MenuItem } from "../types/MenuItem"; 
+import type { MenuItem, GolfRoom } from "../types/MenuItem"; 
 
 export const TEST_MENU: MenuItem[] = [
   {
@@ -139,3 +139,31 @@ export const TEST_MENU: MenuItem[] = [
     ],
   },
 ];
+
+// 新しく追加するゴルフ部屋のダミーデータ 
+export const GOLF_ROOMS: GolfRoom[] = [
+    {
+      id: 'golf-room-1',
+      name: 'スタンダードルーム A',
+      pricePerHour: 2000,
+      isAvailable: true, // 仮に空き
+      description: '気軽に楽しめるスタンダードなゴルフシミュレーションルームです。',
+      imageUrl: '/images/golf_room_1.jpg', // ダミー画像URL
+    },
+    {
+      id: 'golf-room-2',
+      name: 'プレミアムルーム B',
+      pricePerHour: 4000,
+      isAvailable: false, // 仮に使用中
+      description: '最新設備と快適な空間で本格的なゴルフ体験を。',
+      imageUrl: '/images/golf_room_2.jpg', // ダミー画像URL
+    },
+    {
+      id: 'golf-room-3',
+      name: 'VIPスイート C',
+      pricePerHour: 6000,
+      isAvailable: true, // 仮に空き
+      description: '広々とした空間でプライベートなゴルフセッションをお楽しみいただけます。',
+      imageUrl: '/images/golf_room_3.jpg', // ダミー画像URL
+    },
+  ];

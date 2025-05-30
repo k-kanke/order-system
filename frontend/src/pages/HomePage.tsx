@@ -3,14 +3,16 @@ import Header from "../components/Header";
 import { Tabs } from "../components/Tabs";
 import { MenuGrid } from "../components/MenuGrid";
 import { FooterBar } from "../components/FooterBar";
-import type { MenuItem, CartItem } from "../types/MenuItem";
+import type { MenuItem, CartItem, Tab, GolfRoom } from "../types/MenuItem";
 import { CartModal } from "../components/CartModal";
 import { SelectedItemModal } from "../components/SelectedItemModal";
 import { RecentOrders } from "../components/RecentOrders";
-import { TEST_MENU } from "../data/testMenu";
+import { GOLF_ROOMS, TEST_MENU } from "../data/testMenu";
+import { GolfRoomGrid } from "../components/GolfRoomGrid";
+import { BookingModal } from "../components/BookingModal";
 
 export function HomePage() {
-    const [tab, setTab] = useState<'おすすめ' | '全て' | 'フード' | 'ドリンク'>('おすすめ');
+    const [tab, setTab] = useState<Tab>('おすすめ');
     const [cart, setCart] = useState<CartItem[]>([]); // カートの中身
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isHistoryOpen, setIsHistoryOpen] = useState(false);
@@ -20,9 +22,17 @@ export function HomePage() {
     const [orderHistory, setOrderHistory] = useState<CartItem[][]>([]); // 注文ごとに配列で管理（注文履歴に表示する用）
     const [showRecent, setShowRecent] = useState(false);
     const [showFloatingBar, setShowFloatingBar] = useState(true);
+    const [selectedGolfRoom, setSelectedGolfRoom] = useState<GolfRoom | null>(null);
 
     const scrollTimeoutRef = useRef<number | null>(null); 
     const menuGridRef = useRef<HTMLDivElement>(null);
+
+    const filteredMenu = TEST_MENU.filter(item => {
+      if (tab === 'おすすめ') return item.isRecommended;
+      if (tab === 'フード') return item.category === 'フード';
+      if (tab === 'ドリンク') return item.category === 'ドリンク';
+      return true; // 全て
+    });
 
     useEffect(() => {
       const handleScroll = () => {
@@ -61,25 +71,8 @@ export function HomePage() {
     }, [showFloatingBar]);
 
     useEffect(() => {
-      // タブが変更されたら、FooterBarを再度表示する
-      setShowFloatingBar(true);
-
-      // スクロール停止タイマーもリセットして、すぐ消えないようにする
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
-      }
-    }, [tab]);
-
-    useEffect(() => {
         document.body.style.overflow = isHistoryOpen ? 'hidden' : 'auto';
     }, [isHistoryOpen]);
-
-    const filteredMenu = TEST_MENU.filter(item => {
-    if (tab === 'おすすめ') return item.isRecommended;
-    if (tab === 'フード') return item.category === 'フード';
-    if (tab === 'ドリンク') return item.category === 'ドリンク';
-    return true; // 全て
-    });
 
     const addToCart = (item: MenuItem, selectedSize: {label: string; price: number}) => {
       // カート更新
@@ -146,6 +139,10 @@ export function HomePage() {
         alert("注文が確定しました！");
     };
 
+    const handleBookGolfRoom = (room: GolfRoom) => {
+      setSelectedGolfRoom(room);
+    };
+
     // お支払い金額（合計）を計算
     const totalHistoryAmount = orderHistory.reduce((orderSum, order) => {
         return orderSum + order.reduce((sum, item) => sum + item.selectedSize.price * item.count, 0);
@@ -194,15 +191,22 @@ export function HomePage() {
               bottom: showFloatingBar ? "0px" : "0px",
             }}
           >
-            {/* 料理一覧：縦スクロールでカード表示 */}
-            <MenuGrid
-              items={filteredMenu}
-              onAdd={(item) => {
-                const defaultSize = item.sizes[0]; 
-                addToCart(item, defaultSize);
-              }}
-              onConfirm={setSelectedItem}
-            />
+            {/* tabに応じてMenuGridとGolfRoomGridを切り替える */}
+            {tab === 'ゴルフ' ? (
+              <GolfRoomGrid
+                rooms={GOLF_ROOMS}
+                onBook={handleBookGolfRoom}
+              />
+            ) : (
+              <MenuGrid
+                items={filteredMenu}
+                onAdd={(item) => {
+                  const defaultSize = item.sizes[0]; 
+                  addToCart(item, defaultSize);
+                }}
+                onConfirm={setSelectedItem}
+              />
+            )}
           </div>
                 
           {selectedItem && (
@@ -234,20 +238,22 @@ export function HomePage() {
             />
           )}
 
-          <div
-            className={`fixed bottom-0 left-0 right-0 z-50 transition-all duration-300 ${
-              showFloatingBar ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-            }`}
-          >
-            <FooterBar 
-            // total={total}
-            cart={cart} // カートに何か入っている時はバッジ表示。カートに入ってるかどうか確認用 
-            // onCheckout={() => alert('会計へ')} 
-            onCartOpen={() => setIsCartOpen(true)}
-            // onHistoryOpen={() => setIsHistoryOpen(true)}
-            onOrderConfirm={handleOrder}
-            />
-          </div>
+          {tab !== 'ゴルフ' && (
+            <div
+              className={`fixed bottom-0 left-0 right-0 z-50 transition-all duration-300 ${
+                showFloatingBar ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+              }`}
+            >
+              <FooterBar 
+              // total={total}
+              cart={cart} // カートに何か入っている時はバッジ表示。カートに入ってるかどうか確認用 
+              // onCheckout={() => alert('会計へ')} 
+              onCartOpen={() => setIsCartOpen(true)}
+              // onHistoryOpen={() => setIsHistoryOpen(true)}
+              onOrderConfirm={handleOrder}
+              />
+            </div>
+          )}
 
           
           {isCartOpen && (
@@ -319,6 +325,14 @@ export function HomePage() {
                 </div>
                 
               </div>
+          )}
+
+          {/* ★ BookingModalのレンダリングを追加 ★ */}
+          {selectedGolfRoom && (
+            <BookingModal
+                room={selectedGolfRoom}
+                onClose={() => setSelectedGolfRoom(null)}
+            />
           )}
         </div>
       );

@@ -1,3 +1,5 @@
+export type Tab = 'おすすめ' | '全て' | 'フード' | 'ドリンク' | 'ゴルフ';
+
 export type MenuItem = {
     id: number;
     name: string;
@@ -17,3 +19,12 @@ export type CartItem = MenuItem & {
     price: number;
   };
 };
+
+export interface GolfRoom {
+  id: string; // 部屋の識別子
+  name: string; // 部屋の名前
+  pricePerHour: number;
+  isAvailable: boolean;
+  description: string;
+  imageUrl: string; 
+}
