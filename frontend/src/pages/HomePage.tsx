@@ -181,7 +181,7 @@ export function HomePage() {
                   ? "180px"
                   : "280px" 
                 : "150px",
-              bottom: showFloatingBar ? "60px" : "0px",
+              bottom: showFloatingBar ? "0px" : "0px",
             }}
           >
             {/* 料理一覧：縦スクロールでカード表示 */}
