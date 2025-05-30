@@ -14,7 +14,7 @@ export function HomePage() {
     const [cart, setCart] = useState<CartItem[]>([]); // カートの中身
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isHistoryOpen, setIsHistoryOpen] = useState(false);
-    const [total, setTotal] = useState<number>(0); // 注文確定分だけの合計
+    // const [total, setTotal] = useState<number>(0); // 注文確定分だけの合計
     const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
     const [recentItems, setRecentItems] = useState<CartItem[]>([]); // 頼んだものを保存
     const [orderHistory, setOrderHistory] = useState<CartItem[][]>([]); // 注文ごとに配列で管理（注文履歴に表示する用）
@@ -39,7 +39,7 @@ export function HomePage() {
         // スクロール停止時にタブを再表示
         scrollTimeoutRef.current = setTimeout(() => {
           setShowFloatingBar(true);
-        }, 300); // 300ms後に「停止」と見なす
+        }, 500); // 300ms後に「停止」と見なす
       };
 
       const currentMenuGridRef = menuGridRef.current;
@@ -113,8 +113,8 @@ export function HomePage() {
     };
 
     const handleOrder = () => {
-        const orderTotal = cart.reduce((sum, item) => sum + item.selectedSize.price * item.count, 0);
-        setTotal(prev => prev + orderTotal); // 注文金額を反映
+        // const orderTotal = cart.reduce((sum, item) => sum + item.selectedSize.price * item.count, 0);
+        // setTotal(prev => prev + orderTotal); // 注文金額を反映
 
         // recentItemsにカートを統合
         setRecentItems(prev => {
@@ -145,7 +145,10 @@ export function HomePage() {
         <div className="relative h-screen overflow-hidden">
           
           <div className="fixed top-0 left-0 right-0 bg-white z-50">
-            <Header />
+            <Header 
+              onCheckout={() => alert('会計へ')} // 会計処理を記述
+              onHistoryOpen={() => setIsHistoryOpen(true)}
+            />
             <Tabs selected={tab} onChange={setTab} />
             {!showRecent && (
               <button
@@ -227,11 +230,12 @@ export function HomePage() {
             }`}
           >
             <FooterBar 
-            total={total}
+            // total={total}
             cart={cart} // カートに何か入っている時はバッジ表示。カートに入ってるかどうか確認用 
-            onCheckout={() => alert('会計へ')} 
+            // onCheckout={() => alert('会計へ')} 
             onCartOpen={() => setIsCartOpen(true)}
-            onHistoryOpen={() => setIsHistoryOpen(true)}
+            // onHistoryOpen={() => setIsHistoryOpen(true)}
+            onOrderConfirm={handleOrder}
             />
           </div>
 
