@@ -61,6 +61,16 @@ export function HomePage() {
     }, [showFloatingBar]);
 
     useEffect(() => {
+      // タブが変更されたら、FooterBarを再度表示する
+      setShowFloatingBar(true);
+
+      // スクロール停止タイマーもリセットして、すぐ消えないようにする
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+    }, [tab]);
+
+    useEffect(() => {
         document.body.style.overflow = isHistoryOpen ? 'hidden' : 'auto';
     }, [isHistoryOpen]);
 
