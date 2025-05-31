@@ -1,4 +1,3 @@
-// type Tab = 'おすすめ' | '全て' | 'フード' | 'ドリンク' | 'ゴルフ';
 import type { Tab } from "../types/MenuItem";
 
 interface TabsProps {
