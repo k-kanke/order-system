@@ -1,4 +1,4 @@
-export type Tab = 'おすすめ' | '全て' | 'フード' | 'ドリンク' | 'ゴルフ';
+export type Tab = 'おすすめ' | 'おかわり' | 'フード' | 'ドリンク' | 'ゴルフ';
 
 export type MenuItem = {
     id: number;

@@ -6,7 +6,7 @@ interface TabsProps {
 }
 
 export function Tabs({ selected, onChange }: TabsProps) {
-    const tabs: Tab[] = ['おすすめ', '全て', 'フード', 'ドリンク', 'ゴルフ']
+    const tabs: Tab[] = ['おすすめ', 'おかわり', 'フード', 'ドリンク', 'ゴルフ']
     return (
         <div style={{ display: 'flex', overflowX: 'auto', gap: '1rem', padding: '0.2rem' }}>
             {tabs.map(tab => (

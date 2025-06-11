@@ -32,7 +32,7 @@ export function MenuCard({
         <div className="p-2">
           <h4 className="text-base font-bold">{item.name}</h4>
           <p className="text-sm text-gray-600">
-            ¥ {Math.min(...item.sizes.map(size => size.price))}
+            ¥ {Math.min(...item.sizes.map(size => size.price))} ~ {/* 価格が一つなら~を消去するよう後で条件分岐 */}
           </p>
           {/*
           <button 
