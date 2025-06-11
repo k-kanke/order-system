@@ -157,6 +157,7 @@ export function HomePage() {
               onHistoryOpen={() => setIsHistoryOpen(true)}
             />
             <Tabs selected={tab} onChange={setTab} />
+            {/*
             {!showRecent && (
               <button
                 className="ml-4 text-sm bg-blue-500 text-white px-3 py-1 rounded"
@@ -165,6 +166,7 @@ export function HomePage() {
                 最近の注文を表示
               </button>
             )}
+            */}
           </div>
 
           {showRecent && (
@@ -185,9 +187,9 @@ export function HomePage() {
             style={{ 
               top: showRecent 
                 ? recentItems.length === 0
-                  ? "180px"
+                  ? "50px"
                   : "280px" 
-                : "150px",
+                : "100px",
               bottom: showFloatingBar ? "0px" : "0px",
             }}
           >

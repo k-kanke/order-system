@@ -19,7 +19,7 @@ export function SelectedItemModal({
             background: "rgba(0,0,0,0.5)", zIndex: 9999, display: "flex", justifyContent: "center", alignItems: "center", pointerEvents: "auto",
           }}>
             <div style={{
-              background: "#fff", padding: "1rem", borderRadius: "8px", width: "80%", maxWidth: "400px", maxHeight: "80vh", overflowY: "auto", paddingBottom: "5rem",
+              background: "#fff", padding: "1rem", borderRadius: "8px", width: "90%", maxWidth: "400px", maxHeight: "80vh", overflowY: "auto", paddingBottom: "5rem",
               textAlign: "center"
             }}>
               <img src={item.imageUrl} alt={item.name} style={{ width: "100%", borderRadius: "8px" }} />
