@@ -12,7 +12,7 @@ import type { MenuItem } from "../types/MenuItem";
 
 export function MenuCard({
     item,
-    onAdd,
+    // onAdd,
     onConfirm,
   }: {
     item: MenuItem;
@@ -34,6 +34,7 @@ export function MenuCard({
           <p className="text-sm text-gray-600">
             ¥ {Math.min(...item.sizes.map(size => size.price))}
           </p>
+          {/*
           <button 
             onClick={(e) => { 
                 e.stopPropagation(); 
@@ -43,6 +44,7 @@ export function MenuCard({
           >
             追加
           </button>
+          */}
         </div>
       </div>
     );
