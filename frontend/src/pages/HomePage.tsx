@@ -158,6 +158,7 @@ export function HomePage() {
             />
             <Tabs selected={tab} onChange={setTab} />
             {/*
+            最近の注文一覧はタブの方におかわりとして移動
             {!showRecent && (
               <button
                 className="ml-4 text-sm bg-blue-500 text-white px-3 py-1 rounded"
