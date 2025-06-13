@@ -75,7 +75,7 @@ export function HomePage() {
     }, [isHistoryOpen]);
 
     const addToCart = (item: MenuItem, selectedSize: {label: string; price: number}) => {
-      // カート更新
+      // カート更新する
       setCart((prev) => {
           const exiting = prev.find(
             (c) => c.id === item.id && c.selectedSize.label === selectedSize.label
