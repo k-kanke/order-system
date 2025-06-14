@@ -34,17 +34,6 @@ export function MenuCard({
           <p className="text-sm text-gray-600">
             ¥ {Math.min(...item.sizes.map(size => size.price))} ~ {/* 価格が一つなら~を消去するよう後で条件分岐 */}
           </p>
-          {/*
-          <button 
-            onClick={(e) => { 
-                e.stopPropagation(); 
-                onAdd(); 
-            }}
-            className="mt-2 w-full px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600"
-          >
-            追加
-          </button>
-          */}
         </div>
       </div>
     );
