@@ -1,12 +1,3 @@
-{/*
-interface MenuItem {
-    id: number;
-    name: string;
-    price: number;
-    imageUrl: string;
-}
-*/}
-
 import type { MenuItem } from "../types/MenuItem";
 
 
