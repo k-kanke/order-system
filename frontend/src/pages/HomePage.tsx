@@ -13,7 +13,7 @@ import { BookingModal } from "../components/BookingModal";
 import { FooterTabBar } from "../components/FooterTabBar";
 
 export function HomePage() {
-    const [tab, setTab] = useState<Tab>('おすすめ');
+    const [tab, setTab] = useState<Tab>('ドリンク');
     const [cart, setCart] = useState<CartItem[]>([]); // カートの中身
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isHistoryOpen, setIsHistoryOpen] = useState(false);
@@ -30,7 +30,7 @@ export function HomePage() {
     const menuGridRef = useRef<HTMLDivElement>(null);
 
     const filteredMenu = TEST_MENU.filter(item => {
-      if (tab === 'おすすめ') return item.isRecommended;
+      // if (tab === 'おすすめ') return item.isRecommended;
       if (tab === 'フード') return item.category === 'フード';
       if (tab === 'ドリンク') return item.category === 'ドリンク';
       return true; // 全て

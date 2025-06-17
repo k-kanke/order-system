@@ -21,7 +21,7 @@ export function FooterBar({
       <footer
         style={{
           position: "fixed",
-          bottom: 50,
+          bottom: 60,
           left: 10,
           right: 0,
           display: "flex",
