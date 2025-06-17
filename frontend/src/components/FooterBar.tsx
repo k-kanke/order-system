@@ -4,7 +4,7 @@ export function FooterBar({
     // total,
     cart,
     // onCheckout,
-    onCartOpen, // カートボタン用
+    // onCartOpen, // カートボタン用
     // onHistoryOpen,
     onOrderConfirm, // 注文確定ボタン用
   }: {
@@ -21,7 +21,7 @@ export function FooterBar({
       <footer
         style={{
           position: "fixed",
-          bottom: 0,
+          bottom: 50,
           left: 10,
           right: 0,
           display: "flex",
@@ -32,21 +32,6 @@ export function FooterBar({
           // borderTop: "1px solid #ccc",
         }}
         >
-        <button 
-          className="relative" 
-          onClick={onCartOpen}
-          style={{ 
-            fontSize: "2rem", 
-            background: "white", 
-            border: "none", 
-            cursor: "pointer",
-          }}
-        >
-          🛒
-          {cartCount > 0 && (
-            <span className="absolute -top-1 -right-1 bg-red-500 rounded-full w-3 h-3 flex items-center justify-center" />
-          )}
-        </button>
 
         {/* 注文確定ボタン */}
         <div style={{

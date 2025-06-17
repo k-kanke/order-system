@@ -10,6 +10,7 @@ import { RecentOrders } from "../components/RecentOrders";
 import { GOLF_ROOMS, TEST_MENU } from "../data/testMenu";
 import { GolfRoomGrid } from "../components/GolfRoomGrid";
 import { BookingModal } from "../components/BookingModal";
+import { FooterTabBar } from "../components/FooterTabBar";
 
 export function HomePage() {
     const [tab, setTab] = useState<Tab>('おすすめ');
@@ -23,6 +24,7 @@ export function HomePage() {
     const [showRecent, setShowRecent] = useState(false);
     const [showFloatingBar, setShowFloatingBar] = useState(true);
     const [selectedGolfRoom, setSelectedGolfRoom] = useState<GolfRoom | null>(null);
+    const [bottomTab, setBottomTab] = useState<'menu' | 'cart' | 'call'>('menu');
 
     const scrollTimeoutRef = useRef<number | null>(null); 
     const menuGridRef = useRef<HTMLDivElement>(null);
@@ -248,15 +250,25 @@ export function HomePage() {
               }`}
             >
               <FooterBar 
-              // total={total}
-              cart={cart} // カートに何か入っている時はバッジ表示。カートに入ってるかどうか確認用 
-              // onCheckout={() => alert('会計へ')} 
-              onCartOpen={() => setIsCartOpen(true)}
-              // onHistoryOpen={() => setIsHistoryOpen(true)}
-              onOrderConfirm={handleOrder}
+                // total={total}
+                cart={cart} // カートに何か入っている時はバッジ表示。カートに入ってるかどうか確認用 
+                // onCheckout={() => alert('会計へ')} 
+                onCartOpen={() => setIsCartOpen(true)}
+                // onHistoryOpen={() => setIsHistoryOpen(true)}
+                onOrderConfirm={handleOrder}
               />
             </div>
           )}
+
+          <FooterTabBar 
+            selected={bottomTab}
+            onChange={setBottomTab}
+            // total={total}
+            cart={cart} // カートに何か入っている時はバッジ表示。カートに入ってるかどうか確認用 
+            // onCheckout={() => alert('会計へ')} 
+            onCartOpen={() => setIsCartOpen(true)}
+            // onHistoryOpen={() => setIsHistoryOpen(true)}
+          />
 
           
           {isCartOpen && (
