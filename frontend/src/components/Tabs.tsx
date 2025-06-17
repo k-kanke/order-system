@@ -8,23 +8,33 @@ interface TabsProps {
 export function Tabs({ selected, onChange }: TabsProps) {
     const tabs: Tab[] = ['ゴルフ', 'ドリンク', 'フード']
     return (
-        <div style={{ display: 'flex', overflowX: 'auto', gap: '1rem', padding: '0.2rem' }}>
+        <div style={{ 
+            display: 'flex', 
+            overflowX: 'auto', 
+            justifyContent: 'space-around',
+            padding: '0.2rem',
+            width: '100%',
+            backgroundColor: '#f9f9f9',
+        }}>
             {tabs.map(tab => (
-                <button
+                <div
                     key={tab}
                     onClick={() => onChange(tab)}
                     style={{ 
                         fontWeight: selected === tab ? 'bold' : 'normal',
-                        padding: '0.2rem 0.7rem', // タブボタンのスタイルを調整
-                        border: '1px solid #ccc',
-                        borderRadius: '0.5rem',
-                        backgroundColor: selected === tab ? '#e0e0e0' : 'white',
+                        padding: '0.60rem 0', 
+                        color: selected === tab ? '#007bff' : '#555',
+                        backgroundColor: 'white',
                         cursor: 'pointer',
                         whiteSpace: 'nowrap', // タブのテキストが改行されないように
+                        flexGrow: 1,
+                        textAlign: 'center',
+                        minWidth: '0',
+                        transition: 'color 0.3s ease, border-bottom 0.3s ease', 
                     }}
                 >
                     {tab}
-                </button>
+                </div>
             ))}
         </div>
     );
