@@ -11,7 +11,7 @@ export function CategorySidebar({ selected, onChange, categories }: CategorySide
         <div style={{
             display: 'flex',
             flexDirection: 'column', // 垂直方向に並べる
-            // width: '100px', // サイドバーの幅
+            width: '70px', // サイドバーの幅
             backgroundColor: '#f8f8f8', // サイドバーの背景色
             // borderRight: '1px solid #eee', // 右側に区切り線
             paddingTop: '5px', // 上部のパディング
