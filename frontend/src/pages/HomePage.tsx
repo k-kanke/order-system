@@ -68,7 +68,7 @@ export function HomePage() {
       const observerOptions = {
         root: mainContentScrollRef.current, // スクロールする要素
         rootMargin: '0px 0px -70% 0px', 
-        thershold: 0,
+        threshold: 0,
       };
 
       const observer = new IntersectionObserver((entries) => {
@@ -128,11 +128,19 @@ export function HomePage() {
       }
     }, []);
 
+    const showFloatingBarRef = useRef(showFloatingBar);
+
+    useEffect(() => {
+      showFloatingBarRef.current = showFloatingBar;
+    }, [showFloatingBar]);
+
     useEffect(() => {
       const handleScroll = () => {
+        console.log(showFloatingBarRef.current);
         // スクロール中：タブを非表示
-        if (showFloatingBar) {
+        if  (showFloatingBarRef.current) {
           setShowFloatingBar(false);
+          showFloatingBarRef.current = false;
         }
 
         // タイマーをリセット
