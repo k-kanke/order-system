@@ -1,9 +1,9 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import Header from "../components/Header";
 import { Tabs } from "../components/Tabs";
 import { MenuGrid } from "../components/MenuGrid";
 import { FooterBar } from "../components/FooterBar";
-import type { MenuItem, CartItem, Tab, GolfRoom } from "../types/MenuItem";
+import type { MenuItem, CartItem, Tab, GolfRoom, SubCategory } from "../types/MenuItem";
 import { CartModal } from "../components/CartModal";
 import { SelectedItemModal } from "../components/SelectedItemModal";
 import { RecentOrders } from "../components/RecentOrders";
@@ -11,9 +11,10 @@ import { GOLF_ROOMS, TEST_MENU } from "../data/testMenu";
 import { GolfRoomGrid } from "../components/GolfRoomGrid";
 import { BookingModal } from "../components/BookingModal";
 import { FooterTabBar } from "../components/FooterTabBar";
+import { CategorySidebar } from "../components/CategorySidebar";
 
 export function HomePage() {
-    const [tab, setTab] = useState<Tab>('ドリンク');
+    const [topTab, setTopTab] = useState<Tab>('ドリンク');
     const [cart, setCart] = useState<CartItem[]>([]); // カートの中身
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isHistoryOpen, setIsHistoryOpen] = useState(false);
@@ -25,16 +26,107 @@ export function HomePage() {
     const [showFloatingBar, setShowFloatingBar] = useState(true);
     const [selectedGolfRoom, setSelectedGolfRoom] = useState<GolfRoom | null>(null);
     const [bottomTab, setBottomTab] = useState<'menu' | 'cart' | 'call'>('menu');
+    const [sidebarCategory, setSidebarCategory] = useState<SubCategory>('おすすめ');
 
     const scrollTimeoutRef = useRef<number | null>(null); 
-    const menuGridRef = useRef<HTMLDivElement>(null);
+    const mainContentScrollRef = useRef<HTMLDivElement>(null);
+
+    // ドリンクとフードのサブカテゴリーを定義
+    const drinkCategories: SubCategory[] = ['おすすめ', 'ビール', 'サワー', 'ワイン', 'ハイボール', 'ソフトドリンク'];
+    const foodCategories: SubCategory[] = ['おすすめ', '軽食', '揚げ物', 'ご飯もの', 'デザート'];
+
+    // topTabに応じて表示するサブカテゴリーリストを決定
+    const currentSidebarCategories =
+        topTab === 'ドリンク' ? drinkCategories :
+        topTab === 'フード' ? foodCategories :
+        []; // ゴルフタブでは空に
+
+    // topTabが変更されたら、sidebarCategoryを適切な初期値に設定
+    useEffect(() => {
+      if (topTab === 'ドリンク') { 
+        setSidebarCategory('おすすめ');
+      } else if (topTab === 'フード') {
+        setSidebarCategory('おすすめ')
+      }
+    }, [topTab])
 
     const filteredMenu = TEST_MENU.filter(item => {
-      // if (tab === 'おすすめ') return item.isRecommended;
-      if (tab === 'フード') return item.category === 'フード';
-      if (tab === 'ドリンク') return item.category === 'ドリンク';
-      return true; // 全て
+      // topTabが「ゴルフ」の場合
+      if (topTab === 'ゴルフ') {
+        return false;
+      } 
+
+      return item.category === topTab;
     });
+
+    // スクロールスパイのロジック
+    useEffect(() => {
+      if (!mainContentScrollRef.current || (topTab !== 'ドリンク' && topTab !== 'フード')) {
+        return; // ドリンク、フードタブでない時は監視しない
+      }
+
+      const observerOptions = {
+        root: mainContentScrollRef.current, // スクロールする要素
+        rootMargin: '0px 0px -70% 0px', 
+        thershold: 0,
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const categoryId = entry.target.id as SubCategory;
+            if (currentSidebarCategories.includes(categoryId)) {
+              setSidebarCategory(categoryId);
+              return;
+            }
+          }
+        });
+      }, observerOptions);
+
+      // 監視対象の要素を全て登録
+      currentSidebarCategories.forEach(category => {
+        if (category === 'おすすめ') {
+          return;
+        }
+        const element = mainContentScrollRef.current?.querySelector(`#${category}`);
+        if (element) {
+          observer.observe(element);
+        }
+      });
+
+      // クリーンアップ
+      return () => {
+        observer.disconnect();
+      };
+    }, [topTab, currentSidebarCategories]);
+
+    // サイドバーのタブをクリックした時のスクロール処理
+    const handleSidebarCategoryChange = useCallback((category: SubCategory) => {
+      setSidebarCategory(category); // サイドバーの選択状態を更新
+
+      if (!mainContentScrollRef.current) {
+        return;
+      }
+
+      if (category === 'おすすめ') {
+        if (mainContentScrollRef.current) {
+          mainContentScrollRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        return;
+      }
+
+      const element = mainContentScrollRef.current?.querySelector(`#${category}`);
+      if (element) {
+        const headerOffset = 100; // Header + Tabs のおおよその高さ
+        const elementPosition = element.getBoundingClientRect().top + mainContentScrollRef.current.scrollTop;
+        const offsetPosition = elementPosition - headerOffset;
+
+        mainContentScrollRef.current.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+        });
+      }
+    }, []);
 
     useEffect(() => {
       const handleScroll = () => {
@@ -54,7 +146,7 @@ export function HomePage() {
         }, 500); // 300ms後に「停止」と見なす
       };
 
-      const currentMenuGridRef = menuGridRef.current;
+      const currentMenuGridRef = mainContentScrollRef.current;
       if (currentMenuGridRef) {
         currentMenuGridRef.addEventListener("scroll", handleScroll);
       }
@@ -151,14 +243,15 @@ export function HomePage() {
     }, 0);
     
     return (
-        <div className="relative h-screen overflow-hidden">
+        <div className=" h-screen flex flex-col">
           
           <div className="fixed top-0 left-0 right-0 bg-white z-50">
             <Header 
               onCheckout={() => alert('会計へ')} // 会計処理を記述
               onHistoryOpen={() => setIsHistoryOpen(true)}
             />
-            <Tabs selected={tab} onChange={setTab} />
+            {/* 上部のタブ */}
+            <Tabs selected={topTab} onChange={setTopTab} />
             {/*
             最近の注文一覧はタブの方におかわりとして移動
             {!showRecent && (
@@ -185,33 +278,48 @@ export function HomePage() {
           )}
 
           <div 
-            ref={menuGridRef}
-            className="fixed left-0 right-0 overflow-y-auto px-4"
+            // ref={mainContentScrollRef}
+            className="flex flex-1"
             style={{ 
-              top: showRecent 
-                ? recentItems.length === 0
-                  ? "50px"
-                  : "280px" 
-                : "100px",
-              bottom: showFloatingBar ? "0px" : "0px",
+              marginTop: showRecent
+                ? (recentItems.length === 0 ? "50px" : "280px")
+                : "120px",
+              marginBottom: showFloatingBar ? "60px" : "60px",
+              overflow: 'hidden',
             }}
           >
-            {/* tabに応じてMenuGridとGolfRoomGridを切り替える */}
-            {tab === 'ゴルフ' ? (
-              <GolfRoomGrid
-                rooms={GOLF_ROOMS}
-                onBook={handleBookGolfRoom}
-              />
-            ) : (
-              <MenuGrid
-                items={filteredMenu}
-                onAdd={(item) => {
-                  const defaultSize = item.sizes[0]; 
-                  addToCart(item, defaultSize);
-                }}
-                onConfirm={setSelectedItem}
-              />
-            )}
+            <div className="flex flex-1 h-full">
+              {/* ゴルフタブ以外の時にCategorySidebarを表示 */}
+              {(topTab === 'ドリンク' || topTab === 'フード') && (
+                <CategorySidebar
+                  selected={sidebarCategory}
+                  onChange={handleSidebarCategoryChange}
+                  categories={currentSidebarCategories}
+                />
+              )}
+
+              <div
+                ref={mainContentScrollRef}
+                className="flex-1 overflow-y-auto"
+              >
+                {/* tabに応じてMenuGridとGolfRoomGridを切り替える */}
+                {topTab === 'ゴルフ' ? (
+                  <GolfRoomGrid
+                    rooms={GOLF_ROOMS}
+                    onBook={handleBookGolfRoom}
+                  />
+                ) : (
+                  <MenuGrid
+                    items={filteredMenu}
+                    onAdd={(item) => {
+                      const defaultSize = item.sizes[0]; 
+                      addToCart(item, defaultSize);
+                    }}
+                    onConfirm={setSelectedItem}
+                  />
+                )}
+              </div>
+            </div>
           </div>
                 
           {selectedItem && (
@@ -243,7 +351,7 @@ export function HomePage() {
             />
           )}
 
-          {tab !== 'ゴルフ' && (
+          {topTab !== 'ゴルフ' && (
             <div
               className={`fixed bottom-0 left-0 right-0 z-50 transition-all duration-300 ${
                 showFloatingBar ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'

@@ -6,6 +6,7 @@ export const TEST_MENU: MenuItem[] = [
     name: "唐揚げ",
     imageUrl: "/img/karaage.jpg",
     category: "フード",
+    subCategory: '揚げ物',
     isRecommended: true,
     sizes: [
       { label: "S", price: 400 },
@@ -15,20 +16,23 @@ export const TEST_MENU: MenuItem[] = [
   },
   {
     id: 2,
-    name: "ビール",
+    name: "生ビール",
     imageUrl: "/img/beer.jpg",
     category: "ドリンク",
+    subCategory: 'ビール',
     isRecommended: true,
     sizes: [
       { label: "グラス", price: 400 },
       { label: "中ジョッキ", price: 600 },
     ],
+    anchorId: 'ビール'
   },
   {
     id: 3,
     name: '枝豆',
     imageUrl: '/img/edamame.jpg',
     category: 'フード',
+    subCategory: '軽食',
     isRecommended: false,
     sizes: [
         { label: '中', price: 150 },
@@ -40,6 +44,7 @@ export const TEST_MENU: MenuItem[] = [
     name: '烏龍茶',
     imageUrl: '/img/oolong.jpg',
     category: 'ドリンク',
+    subCategory: 'ソフトドリンク',
     isRecommended: false,
     sizes: [
       { label: 'S', price: 300 },
@@ -51,27 +56,31 @@ export const TEST_MENU: MenuItem[] = [
     name: 'レモンサワー',
     imageUrl: '/img/beer.jpg',
     category: 'ドリンク',
+    subCategory: 'サワー',
     isRecommended: false,
     sizes: [
       { label: '1杯', price: 600 },
     ],
+    anchorId: 'サワー',
   },
-  // 以下も同様に修正（ダミーサイズでOK）
   {
     id: 6,
     name: 'コーラ',
     imageUrl: '/img/beer.jpg',
     category: 'ドリンク',
+    subCategory: 'ソフトドリンク',
     isRecommended: false,
     sizes: [
       { label: 'M', price: 400 },
     ],
+    anchorId: 'ソフトドリンク',
   },
   {
     id: 7,
     name: 'ハイボール',
     imageUrl: '/img/beer.jpg',
     category: 'ドリンク',
+    subCategory: 'ハイボール',
     isRecommended: true,
     sizes: [
       { label: '1杯', price: 600 },
@@ -82,6 +91,7 @@ export const TEST_MENU: MenuItem[] = [
     name: '日本酒',
     imageUrl: '/img/beer.jpg',
     category: 'ドリンク',
+    subCategory: 'ワイン',
     isRecommended: false,
     sizes: [
       { label: '1合', price: 600 },
@@ -93,6 +103,7 @@ export const TEST_MENU: MenuItem[] = [
     name: '梅酒',
     imageUrl: '/img/beer.jpg',
     category: 'ドリンク',
+    subCategory: 'ビール',
     isRecommended: false,
     sizes: [
       { label: 'グラス', price: 600 },
@@ -103,6 +114,7 @@ export const TEST_MENU: MenuItem[] = [
     name: 'あ',
     imageUrl: '/img/beer.jpg',
     category: 'ドリンク',
+    subCategory: 'ソフトドリンク',
     isRecommended: false,
     sizes: [
       { label: 'M', price: 600 },
@@ -113,6 +125,7 @@ export const TEST_MENU: MenuItem[] = [
     name: 'い',
     imageUrl: '/img/beer.jpg',
     category: 'ドリンク',
+    subCategory: 'ソフトドリンク',
     isRecommended: false,
     sizes: [
       { label: 'M', price: 600 },
@@ -123,6 +136,7 @@ export const TEST_MENU: MenuItem[] = [
     name: 'う',
     imageUrl: '/img/beer.jpg',
     category: 'ドリンク',
+    subCategory: 'サワー',
     isRecommended: false,
     sizes: [
       { label: 'M', price: 600 },
@@ -133,6 +147,7 @@ export const TEST_MENU: MenuItem[] = [
     name: 'え',
     imageUrl: '/img/beer.jpg',
     category: 'ドリンク',
+    subCategory: 'ビール',
     isRecommended: false,
     sizes: [
       { label: 'M', price: 600 },
