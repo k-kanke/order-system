@@ -18,21 +18,50 @@ export function FooterTabBar({
     return (
         <footer className="fixed bottom-0 left-0 right-0 bg-white border-t z-50 flex justify-around items-center h-16">
             {/* カードボタン */}
-            <div>
+            <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+            }}>
                 <button
                     onClick={() => {
                         onChange('cart');
                         onCartOpen();
                     }}
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        position: 'relative',
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                      }}
                 >
-                    🛒
+                    <span style={{ fontSize: '24px' }}>🛒</span>
                     {cartCount > 0 && (
-                        <span className="absolute -top-1 -right-2 bg-red-500 text-white rounded-full w-4 h-4 text-xs flex items-center justify-center">
+                        <span
+                            style={{
+                            position: 'absolute',
+                            top: '0px',
+                            right: '0px',
+                            backgroundColor: 'red',
+                            color: 'white',
+                            borderRadius: '9999px',
+                            width: '16px',
+                            height: '16px',
+                            fontSize: '10px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            }}
+                        >
                             {cartCount}
                         </span>
                     )}
+
+                    <span style={{ fontSize: '12px', marginTop: '4px' }}>カート</span>
                 </button>
-                <span>カート</span>
             </div>
 
             {/* メニュー */}
