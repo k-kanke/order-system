@@ -3,7 +3,6 @@ import type { CartItem } from "../types/MenuItem";
 type FooterTab = 'cart' | 'menu' | 'call';
 
 export function FooterTabBar({
-    selected,
     onChange,
     cart, 
     onCartOpen,
@@ -65,25 +64,45 @@ export function FooterTabBar({
             </div>
 
             {/* メニュー */}
-            <div>
+            <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+            }}>
                 <button
                     onClick={() => onChange('menu')}
-                    className={`text-xl ${selected === 'menu' ? 'text-blue-500' : 'text-gray-500'}`}
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        position: 'relative',
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                    }}
                 >
-                    📋  
+                    <span style={{ fontSize: '24px' }}>📋</span>
+                    <span style={{ fontSize: '12px', marginTop: '4px' }}>メニュー</span>
                 </button>
-                <span className="text-xs">メニュー</span>
             </div>
 
             {/* 呼び出し */}
             <div>
                 <button
                     onClick={() => onChange('call')}
-                    className={`text-xl ${selected === 'call' ? 'text-blue-500' : 'text-gray-500'}`}
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        position: 'relative',
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                    }}
                 >
-                    🔔 
+                    <span style={{ fontSize: '24px' }}>🔔</span>
+                    <span style={{ fontSize: '12px', marginTop: '4px' }}>呼び出し</span>
                 </button>
-                <span>呼び出し</span>
             </div>
         </footer>
     )
