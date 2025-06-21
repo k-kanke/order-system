@@ -3,11 +3,9 @@ import type { MenuItem } from "../types/MenuItem";
 
 export function MenuCard({
     item,
-    // onAdd,
     onConfirm,
   }: {
     item: MenuItem;
-    onAdd: () => void;
     onConfirm: () => void;
   }) {
     return (

@@ -3,12 +3,11 @@ import type { MenuItem, SubCategory, Tab } from "../types/MenuItem";
 
 interface MenuGridProps {
     items: MenuItem[];
-    onAdd: (item: MenuItem) => void;
     onConfirm: (item: MenuItem) => void;
     topTab: Tab;
 }
 
-export function MenuGrid({ items, onAdd, onConfirm, topTab }: MenuGridProps) {
+export function MenuGrid({ items, onConfirm, topTab }: MenuGridProps) {
     // カテゴリーごとにグループ分け
     const groupedItems = items.reduce((acc, item) => {
         const key: SubCategory = item.subCategory;
@@ -53,7 +52,6 @@ export function MenuGrid({ items, onAdd, onConfirm, topTab }: MenuGridProps) {
                                     <MenuCard
                                         key={item.id}
                                         item={item}
-                                        onAdd={() => onAdd(item)}
                                         onConfirm={() => onConfirm(item)}
                                     />
                                 ))}

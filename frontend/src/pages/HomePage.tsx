@@ -6,7 +6,6 @@ import { FooterBar } from "../components/FooterBar";
 import type { MenuItem, CartItem, Tab, GolfRoom, SubCategory } from "../types/MenuItem";
 import { CartModal } from "../components/CartModal";
 import { SelectedItemModal } from "../components/SelectedItemModal";
-import { RecentOrders } from "../components/RecentOrders";
 import { GOLF_ROOMS, TEST_MENU } from "../data/testMenu";
 import { GolfRoomGrid } from "../components/GolfRoomGrid";
 import { BookingModal } from "../components/BookingModal";
@@ -20,9 +19,8 @@ export function HomePage() {
     const [isHistoryOpen, setIsHistoryOpen] = useState(false);
     // const [total, setTotal] = useState<number>(0); // 注文確定分だけの合計
     const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
-    const [recentItems, setRecentItems] = useState<CartItem[]>([]); // 頼んだものを保存
+    // const [recentItems, setRecentItems] = useState<CartItem[]>([]); // 頼んだものを保存
     const [orderHistory, setOrderHistory] = useState<CartItem[][]>([]); // 注文ごとに配列で管理（注文履歴に表示する用）
-    const [showRecent, setShowRecent] = useState(false);
     const [showFloatingBar, setShowFloatingBar] = useState(true);
     const [selectedGolfRoom, setSelectedGolfRoom] = useState<GolfRoom | null>(null);
     const [bottomTab, setBottomTab] = useState<'menu' | 'cart' | 'call'>('menu');
@@ -177,6 +175,7 @@ export function HomePage() {
         document.body.style.overflow = isHistoryOpen ? 'hidden' : 'auto';
     }, [isHistoryOpen]);
 
+    {/*
     const addToCart = (item: MenuItem, selectedSize: {label: string; price: number}) => {
       // カート更新する
       setCart((prev) => {
@@ -204,6 +203,7 @@ export function HomePage() {
           ];
       });
     };
+    */}
 
     const increaseCount = (id: number) => {
     setCart(prev => prev.map(item =>
@@ -223,6 +223,7 @@ export function HomePage() {
         // setTotal(prev => prev + orderTotal); // 注文金額を反映
 
         // recentItemsにカートを統合
+        {/*
         setRecentItems(prev => {
             const combined = [...cart, ...prev];
             const unique = combined.reduce<CartItem[]>((acc, item) => {
@@ -233,6 +234,7 @@ export function HomePage() {
             }, []);
             return unique.slice(0, 5);
         });
+        */}
 
         // 注文履歴に一回一回のオーダー単位で追加
         setOrderHistory(prev => [[...cart], ...prev]);
@@ -274,6 +276,7 @@ export function HomePage() {
             */}
           </div>
 
+          {/*
           {showRecent && (
             <div className="fixed pt-[100px] left-0 right-0 z-40 bg-white px-4 shadow">
             <RecentOrders
@@ -285,14 +288,13 @@ export function HomePage() {
             />
           </div>
           )}
+          */}
 
           <div 
             // ref={mainContentScrollRef}
             className="flex flex-1"
             style={{ 
-              marginTop: showRecent
-                ? (recentItems.length === 0 ? "50px" : "280px")
-                : "120px",
+              marginTop: "120px",
               marginBottom: showFloatingBar ? "60px" : "60px",
               overflow: 'hidden',
             }}
@@ -320,10 +322,6 @@ export function HomePage() {
                 ) : (
                   <MenuGrid
                     items={filteredMenu}
-                    onAdd={(item) => {
-                      const defaultSize = item.sizes[0]; 
-                      addToCart(item, defaultSize);
-                    }}
                     onConfirm={setSelectedItem}
                     topTab={topTab}
                   />
@@ -337,7 +335,6 @@ export function HomePage() {
               item={selectedItem}
               onClose={() => setSelectedItem(null)}
               onConfirm={(item, count, selectedSize) => {
-                addToCart(item, selectedSize);
                 setCart(prev => {
                   const existing = prev.find(c => c.id === item.id && c.selectedSize.label === selectedSize.label);
                   if (existing) {
