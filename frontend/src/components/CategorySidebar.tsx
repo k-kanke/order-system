@@ -13,7 +13,7 @@ export function CategorySidebar({ selected, onChange, categories }: CategorySide
             flexDirection: 'column',
             width: '70px', 
             backgroundColor: '#f8f8f8', 
-            paddingTop: '5px',
+            // paddingTop: '5px',
             overflowY: 'auto', 
         }}>
             {categories.map(category => (

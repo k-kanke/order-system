@@ -31,21 +31,24 @@ export function MenuGrid({ items, onAdd, onConfirm, topTab }: MenuGridProps) {
                 .sort((a, b) => {
                     return sidebarOrder.indexOf(a) - sidebarOrder.indexOf(b);
                 })
-                .map(subCategoryKey => {
+                .map((subCategoryKey, index, array) => {
                     const subCategoryItems = groupedItems[subCategoryKey as SubCategory];
+                    const isLast = index === array.length - 1;
             
                     return (
                         <div key={subCategoryKey}>
                             {/* 各サブカテゴリーセクションの開始位置にIDを設定 */}
                             {/* Intersection Observerとスクロール遷移のターゲットとなる要素 */}
                             {/* paddingTopとmarginTopで、スクロールしたときにタイトルがヘッダーの裏に隠れないように調整 */}
-                            <div id={subCategoryKey} style={{ paddingTop: '20px', marginTop: '-20px' }}></div>
+                            <div id={subCategoryKey} style={{ paddingTop: '20px', paddingBottom: '5px', marginTop: '-20px' }}></div>
                             
                             {/* サブカテゴリーのタイトル */}
                             <h3 className="text-2xl font-bold mb-4 px-2">{subCategoryKey}</h3> {/* 見出しのスタイル調整 */}
                             
                             {/* そのサブカテゴリーに属するメニューカードのグリッド */}
-                            <div className="grid grid-cols-2 gap-x-4 gap-y-3 px-2">
+                            <div 
+                                className={`grid grid-cols-2 gap-x-4 gap-y-3 px-2 ${isLast ? 'pb-40' : ''}`}
+                            >
                                 {subCategoryItems.map(item => (
                                     <MenuCard
                                         key={item.id}
