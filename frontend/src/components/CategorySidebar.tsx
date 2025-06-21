@@ -10,12 +10,11 @@ export function CategorySidebar({ selected, onChange, categories }: CategorySide
     return (
         <div style={{
             display: 'flex',
-            flexDirection: 'column', // 垂直方向に並べる
-            width: '70px', // サイドバーの幅
-            backgroundColor: '#f8f8f8', // サイドバーの背景色
-            // borderRight: '1px solid #eee', // 右側に区切り線
-            paddingTop: '5px', // 上部のパディング
-            overflowY: 'auto', // カテゴリーが多い場合にスクロール可能にする
+            flexDirection: 'column',
+            width: '70px', 
+            backgroundColor: '#f8f8f8', 
+            paddingTop: '5px',
+            overflowY: 'auto', 
         }}>
             {categories.map(category => (
                 <div

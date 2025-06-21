@@ -32,6 +32,7 @@ export function HomePage() {
     const mainContentScrollRef = useRef<HTMLDivElement>(null);
 
     // ドリンクとフードのサブカテゴリーを定義
+    // ここの定義でサイドバーの順番が決定される
     const drinkCategories: SubCategory[] = ['おすすめ', 'ビール', 'サワー', 'ワイン', 'ハイボール', 'ソフトドリンク'];
     const foodCategories: SubCategory[] = ['おすすめ', '軽食', '揚げ物', 'ご飯もの', 'デザート'];
 
@@ -249,7 +250,7 @@ export function HomePage() {
     const totalHistoryAmount = orderHistory.reduce((orderSum, order) => {
         return orderSum + order.reduce((sum, item) => sum + item.selectedSize.price * item.count, 0);
     }, 0);
-    
+
     return (
         <div className="h-screen w-screen flex flex-col">
           
@@ -324,6 +325,7 @@ export function HomePage() {
                       addToCart(item, defaultSize);
                     }}
                     onConfirm={setSelectedItem}
+                    topTab={topTab}
                   />
                 )}
               </div>
