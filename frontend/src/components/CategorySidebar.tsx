@@ -11,7 +11,7 @@ export function CategorySidebar({ selected, onChange, categories }: CategorySide
         <div style={{
             display: 'flex',
             flexDirection: 'column',
-            width: '70px', 
+            width: '72px', 
             backgroundColor: '#f8f8f8', 
             // paddingTop: '5px',
             overflowY: 'auto', 
@@ -22,17 +22,20 @@ export function CategorySidebar({ selected, onChange, categories }: CategorySide
                     onClick={() => onChange(category)}
                     style={{
                         boxSizing: 'border-box',
-                        padding: '20px 4px', // 上下のパディングを増やしてタップしやすく
+                        padding: '13px 6px', 
+                        height: '50px',
+                        alignItems: 'center',
                         cursor: 'pointer',
                         whiteSpace: 'normal',
                         wordBreak: 'break-word',
-                        textAlign: 'left', // テキストを左揃えにする
+                        textAlign: 'center', // テキストを左揃えにする
                         fontWeight: selected === category ? 'bold' : 'normal',
                         color: selected === category ? '#007bff' : '#555',
                         backgroundColor: selected === category ? 'white' : 'transparent', // 選択時に背景色を白に
                         borderLeft: selected === category ? '4px solid #007bff' : '4px solid transparent', // アクティブなカテゴリーに左線
-                        transition: 'all 0.2s ease', // スムーズなアニメーション
-                        fontSize: 'clamp(10px, 3vw, 14px)'
+                        transition: 'all 0.2s ease', 
+                        fontSize: 'clamp(10px, 3vw, 14px)',
+                        display: 'block',
                     }}
                 >
                     {category}
