@@ -21,15 +21,18 @@ export function CategorySidebar({ selected, onChange, categories }: CategorySide
                     key={category}
                     onClick={() => onChange(category)}
                     style={{
-                        padding: '10px 2px', // 上下のパディングを増やしてタップしやすく
+                        boxSizing: 'border-box',
+                        padding: '20px 4px', // 上下のパディングを増やしてタップしやすく
                         cursor: 'pointer',
-                        whiteSpace: 'nowrap',
+                        whiteSpace: 'normal',
+                        wordBreak: 'break-word',
                         textAlign: 'left', // テキストを左揃えにする
                         fontWeight: selected === category ? 'bold' : 'normal',
                         color: selected === category ? '#007bff' : '#555',
                         backgroundColor: selected === category ? 'white' : 'transparent', // 選択時に背景色を白に
                         borderLeft: selected === category ? '4px solid #007bff' : '4px solid transparent', // アクティブなカテゴリーに左線
                         transition: 'all 0.2s ease', // スムーズなアニメーション
+                        fontSize: 'clamp(10px, 3vw, 14px)'
                     }}
                 >
                     {category}
