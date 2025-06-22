@@ -413,33 +413,55 @@ export function HomePage() {
 
                 {orderHistory.length === 0 && <p>まだ注文はありません。</p>}
 
-                {orderHistory.map((order, index) => {
+                {orderHistory
+                  .slice()
+                  .reverse()
+                  .map((order, index) => {
                     const orderTotal = order.reduce((sum, item) => sum + item.selectedSize.price * item.count, 0);
                     return (
-                        <div key={index} style={{
-                        border: '1px solid #ccc',
-                        borderRadius: '8px',
-                        marginBottom: '1rem',
-                        padding: '1rem',
-                        backgroundColor: '#f9f9f9'
-                        }}>
-                        <h4 style={{ marginBottom: '0.5rem' }}>📝 注文 {orderHistory.length - index}</h4>
+                        <div 
+                          key={index} 
+                          style={{
+                            border: '1px solid #ccc',
+                            borderRadius: '8px',
+                            marginBottom: '1rem',
+                            padding: '1rem',
+                            backgroundColor: '#f9f9f9'
+                          }}>
+                        <h4 style={{ marginBottom: '0.5rem' }}>📝 注文 </h4>
                         {order.map(item => (
-                            <div key={item.id + Math.random()} style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            marginBottom: '0.25rem'
-                            }}>
-                            <span>{item.name}</span>
-                            <span>¥{item.selectedSize.price} × {item.count}</span>
-                            <span>¥{item.selectedSize.price * item.count}</span>
+                            <div 
+                              key={item.id + Math.random()} 
+                              style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                marginBottom: '0.25rem'
+                              }}>
+                            <span style={{ flex: 1 }}>{item.name}</span>
+                            <span
+                              style={{
+                                minWidth: "90px",
+                                textAlign: "right",
+                                color: "#555",
+                              }}
+                            >
+                              ¥{item.selectedSize.price} × {item.count}
+                            </span>
+                            <span
+                              style={{
+                                minWidth: "80px",
+                                textAlign: "right",
+                                fontWeight: "bold",
+                              }}
+                            >¥{item.selectedSize.price * item.count}
+                            </span>
                             </div>
                         ))}
                         <hr style={{ margin: '0.5rem 0' }} />
                         <div style={{ textAlign: 'right', fontWeight: 'bold' }}>
                             合計: ¥{orderTotal}
                         </div>
-                        </div>
+                      </div>
                     );
                 })}
                 
