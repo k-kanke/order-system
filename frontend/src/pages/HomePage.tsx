@@ -205,17 +205,20 @@ export function HomePage() {
     };
     */}
 
-    const increaseCount = (id: number) => {
-    setCart(prev => prev.map(item =>
-        item.id === id ? {...item, count: item.count + 1} : item
-    ));
+    const increaseCount = (id: number, sizeLabel: string)  => {
+      setCart(prev => prev
+        .map(item =>
+          item.id === id && item.selectedSize.label === sizeLabel 
+            ? {...item, count: item.count + 1} 
+            : item
+      ));
     };
 
-    const decreaseCount = (id: number) => {
-    setCart(prev => prev
-        .map(item => item.id === id ? {...item, count: item.count - 1} : item)
+    const decreaseCount = (id: number, sizeLabel: string) => {
+      setCart(prev => prev
+        .map(item => item.id === id && item.selectedSize.label === sizeLabel  ? {...item, count: item.count - 1} : item)
         .filter(item => item.count > 0)
-    );
+      );
     };
 
     const handleOrder = () => {

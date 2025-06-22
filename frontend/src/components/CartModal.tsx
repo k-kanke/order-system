@@ -10,8 +10,8 @@ export function CartModal({
     cart: CartItem[];
     onClose: () => void;
     onOrder: () => void;
-    onIncrease: (id: number) => void;
-    onDecrease: (id: number) => void;
+    onIncrease: (id: number, sizeLabel: string) => void;
+    onDecrease: (id: number, sizeLabel: string) => void;
 }) {
     const total = cart.reduce((sum, item) => sum + item.selectedSize.price * item.count, 0);
 
@@ -27,14 +27,14 @@ export function CartModal({
                         <span className="font-medium">{item.name} - {item.selectedSize.label}</span>
                         <div className="flex items-center gap-2">
                             <button 
-                              onClick={() => onDecrease(item.id)}
+                              onClick={() => onDecrease(item.id, item.selectedSize.label)}
                               className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
                             >
                               −
                             </button>
                             <span className="min-w-[2rem] text-center">{item.count}</span>
                             <button 
-                              onClick={() => onIncrease(item.id)}
+                              onClick={() => onIncrease(item.id, item.selectedSize.label)}
                               className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
                             >
                               ＋
