@@ -105,7 +105,7 @@ export function SelectedItemModal({
                 }}
               >
                 <button 
-                  onClick={() => setCount((c) => Math.max(1, c - 1))}
+                  onClick={() => setCount((c) => (c !== 1 ? c - 1 : c))}
                   style={{
                     fontSize: "1.5rem",
                     width: "40px",
