@@ -53,11 +53,11 @@ export function FooterBar({
               fontSize: "1.2rem",
               fontWeight: "bold",
               cursor: "pointer",
-              opacity: cartCount === 0 ? 0.5 : 1, // 無効化時に半透明にする
-              width: "100%",
+              opacity: cartCount === 0 ? 0.3 : 0.8, // 無効化時に半透明にする
+              width: "93%",
             }}
           >
-            注文を確定
+            <span>注文を送る</span>
           </button>
         </div>
       </footer>
