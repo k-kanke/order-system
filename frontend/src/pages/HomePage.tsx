@@ -387,7 +387,7 @@ export function HomePage() {
 
           
           {isCartOpen && (
-            <div className="fixed inset-0 z-[1000] bg-white">
+            <div className="fixed inset-0 z-[1000]">
               <CartModal
                 cart={cart}
                 onClose={() => setIsCartOpen(false)}
