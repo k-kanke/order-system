@@ -19,7 +19,7 @@ export function SelectedItemModal({
             background: "rgba(0,0,0,0.5)", zIndex: 9999, display: "flex", justifyContent: "center", alignItems: "center", pointerEvents: "auto",
           }}>
             <div style={{
-              background: "#fff", padding: "1rem", borderRadius: "8px", width: "90%", maxWidth: "400px", maxHeight: "80vh", overflowY: "auto", paddingBottom: "5rem",
+              background: "#fff", padding: "1rem", borderRadius: "8px", width: "95%", maxWidth: "450px", maxHeight: "85vh", overflowY: "auto", paddingBottom: "5rem",
               textAlign: "center"
             }}>
               <img src={item.imageUrl} alt={item.name} style={{ width: "100%", borderRadius: "8px" }} />
@@ -87,7 +87,16 @@ export function SelectedItemModal({
                       </span>
 
                       {/* ラベルテキスト */}
-                      <span>{size.label} : ¥{size.price}</span>
+                      <span style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        flexGrow: 1,
+                        fontSize: "1rem",
+                      }}>
+                        <span>{size.label}</span>
+                        <span style={{ fontWeight: 500 }}>¥{size.price}</span>
+                      </span>
                     </label>
                   );
                 })}
