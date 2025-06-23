@@ -40,9 +40,12 @@ export function MenuGrid({ items, recomendedItems, onConfirm, topTab, orderHisto
 
 
     return (
-        <div className="flex flex-col gap-y-5">
+        <div id="おすすめ" className="flex flex-col gap-y-5 bg-white rounded-xl shadow-sm">
             {/* おすすめメニュー */}
-            <h3 className="text-2xl font-bold mb-4 px-2">おすすめ</h3> 
+            <h3 className="flex items-center text-2xl font-bold px-2">
+                おすすめ
+                <span className="flex-grow ml-2 border-t border-dashed border-gray-300"/>
+            </h3> 
             <div className="grid grid-cols-2 gap-x-4 gap-y-3 px-2">
                 {recomendedItems.length > 0 && (
                     recomendedItems.map(item => (
@@ -60,9 +63,12 @@ export function MenuGrid({ items, recomendedItems, onConfirm, topTab, orderHisto
                 <div>
                     <div
                         id="おかわり"
-                        style={{ paddingTop: '20px', paddingBottom: '5px', marginTop: '-20px' }}
+                        style={{ minHeight: '20px', paddingTop: '10px', paddingBottom: '10px', marginTop: '-20px' }}
                     />
-                    <h3 className="text-2xl font-bold mb-4 px-2">おかわり</h3>
+                    <h3 className="flex items-center text-2xl font-bold mb-2 px-2">
+                        おかわり
+                        <span className="flex-grow ml-2 border-t border-dashed border-gray-300"/>
+                    </h3>
                     <div className="grid grid-cols-2 gap-x-4 gap-y-3 px-2">
                         {repeatDrinkItems.map(item => (
                             <MenuCard
@@ -85,17 +91,16 @@ export function MenuGrid({ items, recomendedItems, onConfirm, topTab, orderHisto
                     const isLast = index === array.length - 1;
             
                     return (
-                        <div key={subCategoryKey}>
-                            {/* 各サブカテゴリーセクションの開始位置にIDを設定 */}
-                            {/* Intersection Observerとスクロール遷移のターゲットとなる要素 */}
-                            {/* paddingTopとmarginTopで、スクロールしたときにタイトルがヘッダーの裏に隠れないように調整 */}
-                            <div 
-                                id={subCategoryKey} 
-                                style={{ paddingTop: '20px', paddingBottom: '5px', marginTop: '-20px' }}
-                            />
-                            
+                        <section
+                            key={subCategoryKey}
+                            className="pt-3 pb-3 last:border-0"
+                            id={subCategoryKey}
+                        >
                             {/* サブカテゴリーのタイトル */}
-                            <h3 className="text-2xl font-bold mb-4 px-2">{subCategoryKey}</h3> 
+                            <h3 className="flex items-center text-2xl font-bold mb-2 px-2">
+                                {subCategoryKey}
+                                <span className="flex-grow ml-2 border-t border-dashed border-gray-300"/>
+                            </h3> 
                             
                             {/* そのサブカテゴリーに属するメニューカードのグリッド */}
                             <div 
@@ -108,8 +113,8 @@ export function MenuGrid({ items, recomendedItems, onConfirm, topTab, orderHisto
                                         onConfirm={() => onConfirm(item)}
                                     />
                                 ))}
-                            </div>       
-                        </div>
+                            </div>
+                        </section>                
                     );
                 })
             }

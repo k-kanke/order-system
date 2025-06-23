@@ -79,8 +79,8 @@ export function HomePage() {
 
       const observerOptions = {
         root: mainContentScrollRef.current, // スクロールする要素
-        rootMargin: '0px 0px -70% 0px', 
-        threshold: 0,
+        rootMargin: '0px 0px -40% 0px', 
+        threshold: 0.1,
       };
 
       const observer = new IntersectionObserver((entries) => {
@@ -113,6 +113,21 @@ export function HomePage() {
 
     const isProgrammaticScroll = useRef(false);
 
+    const scrollToCategory = (category: SubCategory) => {
+      const element = mainContentScrollRef.current?.querySelector(`#${category}`);
+      if (element) {
+        if (mainContentScrollRef.current !== null) {
+          const headerOffset = 120;
+          const elementPosition = element.getBoundingClientRect().top + mainContentScrollRef.current.scrollTop;
+          const offsetPosition = elementPosition - headerOffset;
+          mainContentScrollRef.current.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth',
+          });
+        }
+      }
+    };
+
     // サイドバーのタブをクリックした時のスクロール処理
     const handleSidebarCategoryChange = useCallback((category: SubCategory) => {
       setSidebarCategory(category); // サイドバーの選択状態を更新
@@ -123,32 +138,11 @@ export function HomePage() {
 
       isProgrammaticScroll.current = true;
 
-      if (category === 'おすすめ') {
-        if (mainContentScrollRef.current) {
-          mainContentScrollRef.current.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+      scrollToCategory(category);
 
-        setTimeout(() => {
-          isProgrammaticScroll.current = false;
-        }, 500);
-        return;
-      }
-
-      const element = mainContentScrollRef.current?.querySelector(`#${category}`);
-      if (element) {
-        const headerOffset = 100; // Header + Tabs のおおよその高さ
-        const elementPosition = element.getBoundingClientRect().top + mainContentScrollRef.current.scrollTop;
-        const offsetPosition = elementPosition - headerOffset;
-
-        mainContentScrollRef.current.scrollTo({
-            top: offsetPosition,
-            behavior: 'smooth'
-        });
-
-        setTimeout(() => {
-          isProgrammaticScroll.current = false;
-        }, 500);
-      }
+      setTimeout(() => {
+        isProgrammaticScroll.current = false;
+      }, 500);
     }, []);
 
     const showFloatingBarRef = useRef(showFloatingBar);
@@ -376,7 +370,7 @@ export function HomePage() {
                     onBook={handleBookGolfRoom}
                   />
                 ) : (
-                  <div className="flex-1 overflow-y-auto">
+                  <div className="flex-1 overflow-y-auto bg-white">
                     <MenuGrid
                       items={filteredMenu}
                       recomendedItems={recommendedItems}
@@ -492,7 +486,7 @@ export function HomePage() {
                         <h4 style={{ marginBottom: '0.5rem' }}>📝 注文 </h4>
                         {order.map(item => (
                             <div 
-                              key={item.id + Math.random()} 
+                              key={`${item.id}-${item.selectedSize.label}`} 
                               style={{
                                 display: 'flex',
                                 justifyContent: 'space-between',

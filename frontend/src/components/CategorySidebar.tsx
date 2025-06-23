@@ -8,14 +8,17 @@ interface CategorySidebarProps {
 
 export function CategorySidebar({ selected, onChange, categories }: CategorySidebarProps) {
     return (
-        <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            width: '72px', 
-            backgroundColor: '#f8f8f8', 
-            // paddingTop: '5px',
-            overflowY: 'auto', 
-        }}>
+        <div 
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                width: '72px', 
+                backgroundColor: '#f8f8f8', 
+                // paddingTop: '5px',
+                overflowY: 'auto',
+            }}
+            className="shadow-md"
+        >
             {categories.map(category => (
                 <div
                     key={category}
