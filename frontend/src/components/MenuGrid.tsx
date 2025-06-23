@@ -1,5 +1,6 @@
 import { MenuCard } from "./MenuCard";
-import type { MenuItem, SubCategory, Tab } from "../types/MenuItem";
+import type { CartItem, MenuItem, SubCategory, Tab } from "../types/MenuItem";
+import { useMemo } from "react";
 // import { RecommendedSlider } from "./RecommendedSlider";
 
 interface MenuGridProps {
@@ -7,9 +8,10 @@ interface MenuGridProps {
     recomendedItems: MenuItem[];
     onConfirm: (item: MenuItem) => void;
     topTab: Tab;
+    orderHistory: CartItem[][];
 }
 
-export function MenuGrid({ items, recomendedItems, onConfirm, topTab }: MenuGridProps) {
+export function MenuGrid({ items, recomendedItems, onConfirm, topTab, orderHistory }: MenuGridProps) {
     // カテゴリーごとにグループ分け
     const groupedItems = items.reduce((acc, item) => {
         const key: SubCategory = item.subCategory;
@@ -19,6 +21,17 @@ export function MenuGrid({ items, recomendedItems, onConfirm, topTab }: MenuGrid
         acc[key].push(item);
         return acc;
     }, {} as Record<SubCategory, MenuItem[]>);
+
+    // ドリンク履歴から「おかわり」候補を抽出（重複排除）
+    const repeatDrinkItems = useMemo(() => {
+        const seen = new Map<number, MenuItem>();
+        orderHistory.flat().forEach(item => {
+            if (item.category === 'ドリンク' && !seen.has(item.id)) {
+                seen.set(item.id, item);
+            }
+        });
+        return Array.from(seen.values());
+    }, [orderHistory]);
 
     // サイドバーとメニューの順番を合わせる
     const sidebarOrder = topTab === 'ドリンク'
@@ -41,6 +54,26 @@ export function MenuGrid({ items, recomendedItems, onConfirm, topTab }: MenuGrid
                     ))
                 )}
             </div>
+
+            {/* おかわりセクション（ドリンクタブのみ） */}
+            {topTab === 'ドリンク' && repeatDrinkItems.length > 0 && (
+                <div>
+                    <div
+                        id="おかわり"
+                        style={{ paddingTop: '20px', paddingBottom: '5px', marginTop: '-20px' }}
+                    />
+                    <h3 className="text-2xl font-bold mb-4 px-2">おかわり</h3>
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-3 px-2">
+                        {repeatDrinkItems.map(item => (
+                            <MenuCard
+                                key={item.id}
+                                item={item}
+                                onConfirm={() => onConfirm(item)}
+                            />
+                        ))}
+                    </div>
+                </div>
+            )}
             
 
             {Object.keys(groupedItems)

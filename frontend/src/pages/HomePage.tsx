@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import Header from "../components/Header";
 import { Tabs } from "../components/Tabs";
 import { MenuGrid } from "../components/MenuGrid";
@@ -26,20 +26,32 @@ export function HomePage() {
     const [selectedGolfRoom, setSelectedGolfRoom] = useState<GolfRoom | null>(null);
     const [bottomTab, setBottomTab] = useState<'menu' | 'cart' | 'call'>('menu');
     const [sidebarCategory, setSidebarCategory] = useState<SubCategory>('おすすめ');
+    const [hasDrinkOrder, setHasDrinkOrder] = useState(false);
 
     const scrollTimeoutRef = useRef<number | null>(null); 
     const mainContentScrollRef = useRef<HTMLDivElement>(null);
 
     // ドリンクとフードのサブカテゴリーを定義
     // ここの定義でサイドバーの順番が決定される
-    const drinkCategories: SubCategory[] = ['おすすめ', 'ビール', 'サワー', 'ワイン', 'ハイボール', 'ソフトドリンク'];
-    const foodCategories: SubCategory[] = ['おすすめ', '軽食', '揚げ物', 'ご飯もの', 'デザート'];
+    // const drinkCategories: SubCategory[] = ['おすすめ', 'ビール', 'サワー', 'ワイン', 'ハイボール', 'ソフトドリンク'];
+    // const foodCategories: SubCategory[] = ['おすすめ', '軽食', '揚げ物', 'ご飯もの', 'デザート'];
 
     // topTabに応じて表示するサブカテゴリーリストを決定
+    {/*
     const currentSidebarCategories =
         topTab === 'ドリンク' ? drinkCategories :
         topTab === 'フード' ? foodCategories :
         []; // ゴルフタブでは空に
+    */}
+
+    const currentSidebarCategories = useMemo(() => {
+      if (topTab === 'ドリンク') {
+        return ['おすすめ', ...(hasDrinkOrder ? ['おかわり'] : []), 'ビール', 'サワー', 'ワイン', 'ハイボール', 'ソフトドリンク'] as SubCategory[];
+      } else if (topTab === 'フード') {
+        return ['おすすめ', '軽食', '揚げ物', 'ご飯もの', 'デザート'] as SubCategory[];
+      }
+      return [];
+    }, [topTab, hasDrinkOrder]);
 
     // topTabが変更されたら、sidebarCategoryを適切な初期値に設定
     useEffect(() => {
@@ -258,10 +270,16 @@ export function HomePage() {
         // 注文履歴に一回一回のオーダー単位で追加
         setOrderHistory(prev => [[...cart], ...prev]);
 
+        // カートにドリンクがあれば「おかわり」タブを表示
+        if (cart.some(item => item.category === 'ドリンク')) {
+          setHasDrinkOrder(true);
+        }
+
         setCart([]);
         setIsCartOpen(false);
         alert("注文が確定しました！");
     };
+
 
     const handleBookGolfRoom = (room: GolfRoom) => {
       setSelectedGolfRoom(room);
@@ -364,6 +382,7 @@ export function HomePage() {
                       recomendedItems={recommendedItems}
                       onConfirm={setSelectedItem}
                       topTab={topTab}
+                      orderHistory={orderHistory}
                     />
                   </div>
                 )}
