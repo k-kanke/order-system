@@ -19,19 +19,33 @@ export function SelectedItemModal({
             background: "rgba(0,0,0,0.5)", zIndex: 9999, display: "flex", justifyContent: "center", alignItems: "center", pointerEvents: "auto",
           }}>
             <div style={{
-              background: "#fff", padding: "1rem", borderRadius: "8px", width: "95%", maxWidth: "450px", maxHeight: "85vh", overflowY: "auto", paddingBottom: "5rem",
+              background: "#fff", padding: "1rem", borderRadius: "8px", width: "95%", maxWidth: "450px", maxHeight: "87vh", overflowY: "auto", paddingBottom: "3rem",
               textAlign: "center"
             }}>
-              <img src={item.imageUrl} alt={item.name} style={{ width: "100%", borderRadius: "8px" }} />
+              <img src={item.imageUrl} style={{ width: "100%", borderRadius: "8px" }} />
               
+              <h3
+                style={{
+                  fontSize: "1.1rem",
+                  fontWeight: 600,
+                  marginTop: "0.75rem",
+                  marginBottom: "0.2rem",
+                  textAlign: "center",
+                  color: "#111",
+                  wordBreak: "break-word",
+                }}
+              >
+                {item.name}
+              </h3>
+
               {/* サイズ選択 */}
               <div
                 style={{
                   display: "flex",
-                  gap: "0.5rem",
+                  gap: "0.1rem",
                   flexDirection: "column",
-                  marginBottom: "1.5rem",
-                  marginTop: "1.5rem"
+                  marginBottom: "1rem",
+                  marginTop: "1rem"
                 }}
               >
                 {item.sizes.map((size) => {
@@ -39,7 +53,6 @@ export function SelectedItemModal({
                   return (
                     <label
                       key={size.label}
-                      // onClick={() => setSelectedSize(size)}
                       style={{
                         display: "flex",
                         alignItems: "center",
@@ -110,7 +123,7 @@ export function SelectedItemModal({
                   alignItems: "center",
                   gap: "1rem",
                   margin: "1rem 0",
-                  marginBottom: "1.5rem",
+                  marginBottom: "0.5rem",
                 }}
               >
                 <button 
