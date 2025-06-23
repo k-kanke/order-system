@@ -6,12 +6,14 @@ export function CartModal({
     onOrder,
     onIncrease,
     onDecrease,
+    // onRemove,
 }: {
     cart: CartItem[];
     onClose: () => void;
     onOrder: () => void;
     onIncrease: (id: number, sizeLabel: string) => void;
     onDecrease: (id: number, sizeLabel: string) => void;
+    onRemove: (id: number, sizeLabel: string) => void;
 }) {
     const total = cart.reduce((sum, item) => sum + item.selectedSize.price * item.count, 0);
 
@@ -22,26 +24,56 @@ export function CartModal({
             {cart.length === 0 ? <p className="text-gray-500 text-center">カートは空です</p> : (
               <ul className="space-y-4">
                 {cart.map(item => (
-                    <li key={item.id} style={{ marginBottom: '1rem' }}>
-                        <div className="flex justify-between items-center mb-1">
-                        <span className="font-medium">{item.name} - {item.selectedSize.label}</span>
+                    <li 
+                      key={`${item.id}-${item.selectedSize.label}`} 
+                      className="group"
+                    >
+                      <div className="flex justify-between items-center mb-1">
+                        <div className="flex items-start gap-2">
+                          {/*
+                          <button
+                            onClick={() => onRemove(item.id, item.selectedSize.label)}
+                            className=" text-black text-sm hidden group-hover:block"
+                            style={{
+                              backgroundColor: 'transparent',
+                              border: 'none',
+                              padding: 0,
+                              lineHeight: 1,
+                            }}
+                            aria-label="削除"
+                          >
+                            ✕
+                          </button>
+                          */}
+                          <div>
+                            <p className="font-semibold">{item.name}</p>
+                            <p className="text-sm text-gray-500">{item.selectedSize.label}</p>
+                          </div>
+                        </div>
                         <div className="flex items-center gap-2">
-                            <button 
-                              onClick={() => onDecrease(item.id, item.selectedSize.label)}
-                              className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-                            >
-                              −
-                            </button>
-                            <span className="min-w-[2rem] text-center">{item.count}</span>
-                            <button 
-                              onClick={() => onIncrease(item.id, item.selectedSize.label)}
-                              className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-                            >
-                              ＋
-                            </button>
+                          <button 
+                            onClick={() => {
+                              if (item.count > 1) {
+                                onDecrease(item.id, item.selectedSize.label)
+                              }
+                            }}
+                            disabled={item.count === 1}
+                            className={`px-2 py-1 rounded 
+                              ${item.count === 1 ? 'bg-gray-300 cursor-not-allowed' : 'bg-gray-200 hover:bg-gray-300'}
+                            `}
+                          >
+                            −
+                          </button>
+                          <span className="min-w-[2rem] text-center">{item.count}</span>
+                          <button 
+                            onClick={() => onIncrease(item.id, item.selectedSize.label)}
+                            className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                          >
+                            ＋
+                          </button>
                         </div>
-                        </div>
-                        <p className="text-sm text-gray-600">小計: ¥{item.selectedSize.price * item.count}</p>
+                      </div>
+                      <p className="text-sm text-gray-600">小計: ¥{item.selectedSize.price * item.count}</p>
                     </li>
                     ))}
               </ul>

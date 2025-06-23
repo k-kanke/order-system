@@ -221,6 +221,10 @@ export function HomePage() {
       );
     };
 
+    const onRemove = (id: number, sizeLabel: string) => {
+      setCart(prev => prev.filter(item => !(item.id === id && item.selectedSize.label === sizeLabel)))
+    }
+ 
     const handleOrder = () => {
         // const orderTotal = cart.reduce((sum, item) => sum + item.selectedSize.price * item.count, 0);
         // setTotal(prev => prev + orderTotal); // 注文金額を反映
@@ -396,6 +400,7 @@ export function HomePage() {
                 onClose={() => setIsCartOpen(false)}
                 onIncrease={increaseCount}
                 onDecrease={decreaseCount}
+                onRemove={onRemove}
                 onOrder={handleOrder}
               />
             </div>
