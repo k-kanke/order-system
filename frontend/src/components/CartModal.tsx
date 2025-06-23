@@ -52,15 +52,11 @@ export function CartModal({
                         </div>
                         <div className="flex items-center gap-2">
                           <button 
-                            onClick={() => {
-                              if (item.count > 1) {
-                                onDecrease(item.id, item.selectedSize.label)
-                              }
+                            onClick={() => {      
+                              onDecrease(item.id, item.selectedSize.label)
                             }}
-                            disabled={item.count === 1}
-                            className={`px-2 py-1 rounded 
-                              ${item.count === 1 ? 'bg-gray-300 cursor-not-allowed' : 'bg-gray-200 hover:bg-gray-300'}
-                            `}
+                            // disabled={item.count === 1}
+                            className={"px-2 py-1 rounded bg-gray-200 hover:bg-gray-300"}
                           >
                             −
                           </button>
@@ -88,7 +84,12 @@ export function CartModal({
               </button>
               <button 
                 onClick={onOrder}
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                disabled={cart.length === 0}
+                className={`px-4 py-2 rounded transition-colors
+                  ${cart.length === 0
+                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    : 'bg-blue-600 text-white hover:bg-blue-700'}
+                `}
               >
                 注文を送る
               </button>
