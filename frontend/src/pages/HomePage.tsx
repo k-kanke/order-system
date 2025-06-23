@@ -11,6 +11,7 @@ import { GolfRoomGrid } from "../components/GolfRoomGrid";
 import { BookingModal } from "../components/BookingModal";
 import { FooterTabBar } from "../components/FooterTabBar";
 import { CategorySidebar } from "../components/CategorySidebar";
+// import { RecommendedSlider } from "../components/RecommendedSlider";
 
 export function HomePage() {
     const [topTab, setTopTab] = useState<Tab>('ドリンク');
@@ -71,6 +72,8 @@ export function HomePage() {
       };
 
       const observer = new IntersectionObserver((entries) => {
+        if (isProgrammaticScroll.current) return;
+
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             const categoryId = entry.target.id as SubCategory;
@@ -84,9 +87,6 @@ export function HomePage() {
 
       // 監視対象の要素を全て登録
       currentSidebarCategories.forEach(category => {
-        if (category === 'おすすめ') {
-          return;
-        }
         const element = mainContentScrollRef.current?.querySelector(`#${category}`);
         if (element) {
           observer.observe(element);
@@ -99,6 +99,8 @@ export function HomePage() {
       };
     }, [topTab, currentSidebarCategories]);
 
+    const isProgrammaticScroll = useRef(false);
+
     // サイドバーのタブをクリックした時のスクロール処理
     const handleSidebarCategoryChange = useCallback((category: SubCategory) => {
       setSidebarCategory(category); // サイドバーの選択状態を更新
@@ -107,10 +109,16 @@ export function HomePage() {
         return;
       }
 
+      isProgrammaticScroll.current = true;
+
       if (category === 'おすすめ') {
         if (mainContentScrollRef.current) {
           mainContentScrollRef.current.scrollTo({ top: 0, behavior: 'smooth' });
         }
+
+        setTimeout(() => {
+          isProgrammaticScroll.current = false;
+        }, 500);
         return;
       }
 
@@ -124,6 +132,10 @@ export function HomePage() {
             top: offsetPosition,
             behavior: 'smooth'
         });
+
+        setTimeout(() => {
+          isProgrammaticScroll.current = false;
+        }, 500);
       }
     }, []);
 
@@ -260,6 +272,9 @@ export function HomePage() {
         return orderSum + order.reduce((sum, item) => sum + item.selectedSize.price * item.count, 0);
     }, 0);
 
+    // おすすめメニュー抽出
+    const recommendedItems = filteredMenu.filter(item => item.isRecommended);
+
     return (
         <div className="h-screen w-screen flex flex-col">
           
@@ -297,6 +312,22 @@ export function HomePage() {
           )}
           */}
 
+          {/* 1. おすすめスライダーを親overflow:hiddenの外に配置 */}
+          {/*
+          {recommendedItems.length > 0 && (
+            <div
+              className="sticky top-[120px] z-20 bg-white"
+              style={{ padding: "0 16px", marginBottom: 12 }}
+            >
+              <RecommendedSlider
+                items={recommendedItems}
+                onSelect={setSelectedItem}
+              />
+            </div>
+          )}
+          */}
+
+
           <div 
             // ref={mainContentScrollRef}
             className="flex flex-1"
@@ -327,11 +358,14 @@ export function HomePage() {
                     onBook={handleBookGolfRoom}
                   />
                 ) : (
-                  <MenuGrid
-                    items={filteredMenu}
-                    onConfirm={setSelectedItem}
-                    topTab={topTab}
-                  />
+                  <div className="flex-1 overflow-y-auto">
+                    <MenuGrid
+                      items={filteredMenu}
+                      recomendedItems={recommendedItems}
+                      onConfirm={setSelectedItem}
+                      topTab={topTab}
+                    />
+                  </div>
                 )}
               </div>
             </div>

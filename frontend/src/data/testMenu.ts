@@ -92,7 +92,7 @@ export const TEST_MENU: MenuItem[] = [
     imageUrl: '/img/beer.jpg',
     category: 'ドリンク',
     subCategory: 'ワイン',
-    isRecommended: false,
+    isRecommended: true,
     sizes: [
       { label: '1合', price: 600 },
       { label: '2合', price: 1000 },
@@ -137,7 +137,7 @@ export const TEST_MENU: MenuItem[] = [
     imageUrl: '/img/beer.jpg',
     category: 'ドリンク',
     subCategory: 'サワー',
-    isRecommended: false,
+    isRecommended: true,
     sizes: [
       { label: 'M', price: 600 },
     ],
