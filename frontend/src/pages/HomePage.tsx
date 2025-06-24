@@ -11,16 +11,13 @@ import { GolfRoomGrid } from "../components/GolfRoomGrid";
 import { BookingModal } from "../components/BookingModal";
 import { FooterTabBar } from "../components/FooterTabBar";
 import { CategorySidebar } from "../components/CategorySidebar";
-// import { RecommendedSlider } from "../components/RecommendedSlider";
 
 export function HomePage() {
     const [topTab, setTopTab] = useState<Tab>('ドリンク');
     const [cart, setCart] = useState<CartItem[]>([]); // カートの中身
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isHistoryOpen, setIsHistoryOpen] = useState(false);
-    // const [total, setTotal] = useState<number>(0); // 注文確定分だけの合計
     const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
-    // const [recentItems, setRecentItems] = useState<CartItem[]>([]); // 頼んだものを保存
     const [orderHistory, setOrderHistory] = useState<CartItem[][]>([]); // 注文ごとに配列で管理（注文履歴に表示する用）
     const [showFloatingBar, setShowFloatingBar] = useState(true);
     const [selectedGolfRoom, setSelectedGolfRoom] = useState<GolfRoom | null>(null);
@@ -32,19 +29,6 @@ export function HomePage() {
 
     const scrollTimeoutRef = useRef<number | null>(null); 
     const mainContentScrollRef = useRef<HTMLDivElement>(null);
-
-    // ドリンクとフードのサブカテゴリーを定義
-    // ここの定義でサイドバーの順番が決定される
-    // const drinkCategories: SubCategory[] = ['おすすめ', 'ビール', 'サワー', 'ワイン', 'ハイボール', 'ソフトドリンク'];
-    // const foodCategories: SubCategory[] = ['おすすめ', '軽食', '揚げ物', 'ご飯もの', 'デザート'];
-
-    // topTabに応じて表示するサブカテゴリーリストを決定
-    {/*
-    const currentSidebarCategories =
-        topTab === 'ドリンク' ? drinkCategories :
-        topTab === 'フード' ? foodCategories :
-        []; // ゴルフタブでは空に
-    */}
 
     const currentSidebarCategories = useMemo(() => {
       if (topTab === 'ドリンク') {
@@ -208,13 +192,11 @@ export function HomePage() {
         currentMenuGridRef.addEventListener("scroll", handleScroll);
       }
 
-      // window.addEventListener("scroll", handleScroll);
-
       return () => {
         if (currentMenuGridRef) {
           currentMenuGridRef.removeEventListener("scroll", handleScroll);
         }
-        // window.removeEventListener("scroll", handleScroll);
+        
         if (scrollTimeoutRef.current) {
           clearTimeout(scrollTimeoutRef.current);
         }
@@ -224,36 +206,6 @@ export function HomePage() {
     useEffect(() => {
         document.body.style.overflow = isHistoryOpen ? 'hidden' : 'auto';
     }, [isHistoryOpen]);
-
-    {/*
-    const addToCart = (item: MenuItem, selectedSize: {label: string; price: number}) => {
-      // カート更新する
-      setCart((prev) => {
-          const exiting = prev.find(
-            (c) => c.id === item.id && c.selectedSize.label === selectedSize.label
-          );
-          if (exiting) {
-            return prev.map((c) =>
-              c.id === item.id && c.selectedSize.label === selectedSize.label
-                ? { ...c, count: c.count + 1 }
-                : c
-            );
-          }
-          return [
-            ...prev, 
-            {
-              id: item.id,
-              name: item.name,
-              imageUrl: item.imageUrl,
-              category: item.category,
-              isRecommended: item.isRecommended,
-              selectedSize,
-              count: 1,
-            } as CartItem,
-          ];
-      });
-    };
-    */}
 
     const increaseCount = (id: number, sizeLabel: string)  => {
       setCart(prev => prev
@@ -276,23 +228,6 @@ export function HomePage() {
     }
  
     const handleOrder = () => {
-        // const orderTotal = cart.reduce((sum, item) => sum + item.selectedSize.price * item.count, 0);
-        // setTotal(prev => prev + orderTotal); // 注文金額を反映
-
-        // recentItemsにカートを統合
-        {/*
-        setRecentItems(prev => {
-            const combined = [...cart, ...prev];
-            const unique = combined.reduce<CartItem[]>((acc, item) => {
-            if (!acc.find(i => i.id === item.id)) {
-                acc.push({ ...item });
-            }
-            return acc;
-            }, []);
-            return unique.slice(0, 5);
-        });
-        */}
-
         // 注文履歴に一回一回のオーダー単位で追加
         setOrderHistory(prev => [[...cart], ...prev]);
 
@@ -329,48 +264,7 @@ export function HomePage() {
             />
             {/* 上部のタブ */}
             <Tabs selected={topTab} onChange={setTopTab} />
-            {/*
-            最近の注文一覧はタブの方におかわりとして移動
-            {!showRecent && (
-              <button
-                className="ml-4 text-sm bg-blue-500 text-white px-3 py-1 rounded"
-                onClick={() => setShowRecent(true)}
-              >
-                最近の注文を表示
-              </button>
-            )}
-            */}
           </div>
-
-          {/*
-          {showRecent && (
-            <div className="fixed pt-[100px] left-0 right-0 z-40 bg-white px-4 shadow">
-            <RecentOrders
-              items={recentItems}
-              onRepeat={(item) => {
-                addToCart(item, item.selectedSize);
-              }}
-              onClose={() => setShowRecent(false)}
-            />
-          </div>
-          )}
-          */}
-
-          {/* 1. おすすめスライダーを親overflow:hiddenの外に配置 */}
-          {/*
-          {recommendedItems.length > 0 && (
-            <div
-              className="sticky top-[120px] z-20 bg-white"
-              style={{ padding: "0 16px", marginBottom: 12 }}
-            >
-              <RecommendedSlider
-                items={recommendedItems}
-                onSelect={setSelectedItem}
-              />
-            </div>
-          )}
-          */}
-
 
           <div 
             // ref={mainContentScrollRef}
@@ -464,11 +358,8 @@ export function HomePage() {
           <FooterTabBar 
             selected={bottomTab}
             onChange={setBottomTab}
-            // total={total}
             cart={cart} // カートに何か入っている時はバッジ表示。カートに入ってるかどうか確認用 
-            // onCheckout={() => alert('会計へ')} 
             onCartOpen={() => setIsCartOpen(true)}
-            // onHistoryOpen={() => setIsHistoryOpen(true)}
           />
 
           
