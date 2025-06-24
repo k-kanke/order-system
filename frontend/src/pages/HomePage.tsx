@@ -26,6 +26,8 @@ export function HomePage() {
     const [selectedGolfRoom, setSelectedGolfRoom] = useState<GolfRoom | null>(null);
     const [bottomTab, setBottomTab] = useState<'menu' | 'cart' | 'call'>('menu');
     const [sidebarCategory, setSidebarCategory] = useState<SubCategory>('おすすめ');
+    const [manualHighlight, setManualHighlight] = useState(true);
+
     const [hasDrinkOrder, setHasDrinkOrder] = useState(false);
 
     const scrollTimeoutRef = useRef<number | null>(null); 
@@ -62,6 +64,34 @@ export function HomePage() {
       }
     }, [topTab])
 
+    useEffect(() => {
+      // タブ変更時に「おすすめ」で固定
+      setSidebarCategory('おすすめ');
+      setManualHighlight(true);
+
+      const element = mainContentScrollRef.current?.querySelector(`#おすすめ`);
+      if (element && mainContentScrollRef.current) {
+        const headerOffset = 120;
+        const elementPosition = element.getBoundingClientRect().top + mainContentScrollRef.current.scrollTop;
+        const offsetPosition = elementPosition - headerOffset;
+
+        isProgrammaticScroll.current = true;
+        mainContentScrollRef.current.scrollTo({
+          top: offsetPosition,
+          behavior: 'auto',
+        });
+        setTimeout(() => {
+          isProgrammaticScroll.current = false;
+        }, 500);
+      } 
+    
+      const timeout = setTimeout(() => {
+        setManualHighlight(false); 
+      }, 300); 
+    
+      return () => clearTimeout(timeout);
+    }, [topTab]);
+
     const filteredMenu = TEST_MENU.filter(item => {
       // topTabが「ゴルフ」の場合
       if (topTab === 'ゴルフ') {
@@ -84,7 +114,7 @@ export function HomePage() {
       };
 
       const observer = new IntersectionObserver((entries) => {
-        if (isProgrammaticScroll.current) return;
+        if (isProgrammaticScroll.current || manualHighlight) return;
 
         entries.forEach(entry => {
           if (entry.isIntersecting) {
@@ -131,6 +161,7 @@ export function HomePage() {
     // サイドバーのタブをクリックした時のスクロール処理
     const handleSidebarCategoryChange = useCallback((category: SubCategory) => {
       setSidebarCategory(category); // サイドバーの選択状態を更新
+      setManualHighlight(true); 
 
       if (!mainContentScrollRef.current) {
         return;
@@ -142,6 +173,7 @@ export function HomePage() {
 
       setTimeout(() => {
         isProgrammaticScroll.current = false;
+        setManualHighlight(false);
       }, 500);
     }, []);
 
