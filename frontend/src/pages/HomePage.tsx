@@ -345,11 +345,8 @@ export function HomePage() {
               }`}
             >
               <FooterBar 
-                // total={total}
                 cart={cart} // カートに何か入っている時はバッジ表示。カートに入ってるかどうか確認用 
-                // onCheckout={() => alert('会計へ')} 
                 onCartOpen={() => setIsCartOpen(true)}
-                // onHistoryOpen={() => setIsHistoryOpen(true)}
                 onOrderConfirm={handleOrder}
               />
             </div>
