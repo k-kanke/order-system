@@ -33,6 +33,16 @@ export function MenuGrid({ items, recomendedItems, onConfirm, topTab, orderHisto
         return Array.from(seen.values());
     }, [orderHistory]);
 
+    const repeatFoodItems = useMemo(() => {
+        const seen = new Map<number, MenuItem>();
+        orderHistory.flat().forEach(item => {
+            if (item.category === 'フード' && !seen.has(item.id)) {
+                seen.set(item.id, item);
+            }
+        });
+        return Array.from(seen.values());
+    }, [orderHistory]);
+
     // サイドバーとメニューの順番を合わせる
     const sidebarOrder = topTab === 'ドリンク'
         ? ['おすすめ', 'ビール', 'サワー', 'ワイン', 'ハイボール', 'ソフトドリンク']
@@ -58,7 +68,7 @@ export function MenuGrid({ items, recomendedItems, onConfirm, topTab, orderHisto
                 )}
             </div>
 
-            {/* おかわりセクション（ドリンクタブのみ） */}
+            {/* おかわりセクション（ドリンクタブ） */}
             {topTab === 'ドリンク' && repeatDrinkItems.length > 0 && (
                 <div>
                     <div
@@ -71,6 +81,29 @@ export function MenuGrid({ items, recomendedItems, onConfirm, topTab, orderHisto
                     </h3>
                     <div className="grid grid-cols-2 gap-x-4 gap-y-3 px-2">
                         {repeatDrinkItems.map(item => (
+                            <MenuCard
+                                key={item.id}
+                                item={item}
+                                onConfirm={() => onConfirm(item)}
+                            />
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {/* おかわりセクション（フードタブ） */}
+            {topTab === 'フード' && repeatFoodItems.length > 0 && (
+                <div>
+                    <div
+                        id="おかわり"
+                        style={{ minHeight: '20px', paddingTop: '10px', paddingBottom: '10px', marginTop: '-20px' }}
+                    />
+                    <h3 className="flex items-center text-2xl font-bold mb-2 px-2">
+                        おかわり
+                        <span className="flex-grow ml-2 border-t border-dashed border-gray-300"/>
+                    </h3>
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-3 px-2">
+                        {repeatFoodItems.map(item => (
                             <MenuCard
                                 key={item.id}
                                 item={item}

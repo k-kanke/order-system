@@ -26,6 +26,7 @@ export function HomePage() {
     const [manualHighlight, setManualHighlight] = useState(true);
 
     const [hasDrinkOrder, setHasDrinkOrder] = useState(false);
+    const [hasFoodOrder, setHasFoodOrder] = useState(false);
 
     const scrollTimeoutRef = useRef<number | null>(null); 
     const mainContentScrollRef = useRef<HTMLDivElement>(null);
@@ -34,10 +35,10 @@ export function HomePage() {
       if (topTab === 'ドリンク') {
         return ['おすすめ', ...(hasDrinkOrder ? ['おかわり'] : []), 'ビール', 'サワー', 'ワイン', 'ハイボール', 'ソフトドリンク'] as SubCategory[];
       } else if (topTab === 'フード') {
-        return ['おすすめ', '軽食', '揚げ物', 'ご飯もの', 'デザート'] as SubCategory[];
+        return ['おすすめ', ...(hasFoodOrder ? ['おかわり'] : []), '軽食', '揚げ物', 'ご飯もの', 'デザート'] as SubCategory[];
       }
       return [];
-    }, [topTab, hasDrinkOrder]);
+    }, [topTab, hasDrinkOrder, hasFoodOrder]);
 
     // topTabが変更されたら、sidebarCategoryを適切な初期値に設定
     useEffect(() => {
@@ -234,6 +235,10 @@ export function HomePage() {
         // カートにドリンクがあれば「おかわり」タブを表示
         if (cart.some(item => item.category === 'ドリンク')) {
           setHasDrinkOrder(true);
+        }
+
+        if (cart.some(item => item.category === 'フード')) {
+          setHasFoodOrder(true);
         }
 
         setCart([]);
