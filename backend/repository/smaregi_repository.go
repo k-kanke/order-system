@@ -32,6 +32,8 @@ func RequestAccessToken() (string, error) {
 
 	body, _ := io.ReadAll(res.Body)
 	var result map[string]interface{}
+	// ログ出力
+	fmt.Println("Response Body:", string(body))
 	json.Unmarshal(body, &result)
 
 	token, ok := result["access_token"].(string)
