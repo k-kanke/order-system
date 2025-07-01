@@ -5,11 +5,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/k-kanke/order-system/service"
-	"github.com/k-kanke/order-system/util"
 )
 
 func GetToken(c *gin.Context) {
-	token, err := service.GetAccessToken()
+	token, err := service.GetAccessTokenWithCache()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -18,8 +17,7 @@ func GetToken(c *gin.Context) {
 }
 
 func GetProducts(c *gin.Context) {
-	token := util.ExtractBearerToken(c.GetHeader("Authorization"))
-	data, err := service.FetchProducts(token)
+	data, err := service.GetProducts()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

@@ -1,4 +1,4 @@
-package repository
+package service
 
 import (
 	"bytes"
@@ -9,9 +9,26 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"sync"
+	"time"
 )
 
-func RequestAccessToken() (string, error) {
+var (
+	cachedToken     string
+	cachedTokenTime time.Time
+	mu              sync.Mutex
+)
+
+func GetAccessTokenWithCache() (string, error) {
+	mu.Lock()
+	defer mu.Unlock()
+
+	// cacheが存在し、1hour以内なら再利用
+	if cachedToken != "" && time.Since(cachedTokenTime) < time.Hour {
+		return cachedToken, nil
+	}
+
+	// 新しく取得
 	data := url.Values{}
 	data.Set("grant_type", "client_credentials")
 	data.Set("scope", "pos.products:read")
@@ -32,29 +49,16 @@ func RequestAccessToken() (string, error) {
 
 	body, _ := io.ReadAll(res.Body)
 	var result map[string]interface{}
-	// ログ出力
-	fmt.Println("Response Body:", string(body))
 	json.Unmarshal(body, &result)
 
 	token, ok := result["access_token"].(string)
 	if !ok {
 		return "", fmt.Errorf("access_token not found")
 	}
+
+	// cacheに保存
+	cachedToken = token
+	cachedTokenTime = time.Now()
+
 	return token, nil
-}
-
-func GetProducts(token string) (interface{}, error) {
-	url := fmt.Sprintf("https://api.smaregi.dev/%s/pos/products", os.Getenv("CONTRACT_ID"))
-	req, _ := http.NewRequest("GET", url, nil)
-	req.Header.Add("Authorization", "Bearer "+token)
-
-	res, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer res.Body.Close()
-
-	var result interface{}
-	json.NewDecoder(res.Body).Decode(&result)
-	return result, nil
 }
