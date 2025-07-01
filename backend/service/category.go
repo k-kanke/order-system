@@ -7,8 +7,8 @@ import (
 	"os"
 )
 
-func FetchProducts(token string) (interface{}, error) {
-	url := fmt.Sprintf("https://api.smaregi.dev/%s/pos/products", os.Getenv("CONTRACT_ID"))
+func FetchCategories(token string, level string) (interface{}, error) {
+	url := fmt.Sprintf("https://api.smaregi.dev/%s/pos/categories?level=%s", os.Getenv("CONTRACT_ID"), level)
 	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Add("Authorization", "Bearer "+token)
 

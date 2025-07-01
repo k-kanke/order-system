@@ -17,7 +17,13 @@ func GetToken(c *gin.Context) {
 }
 
 func GetProducts(c *gin.Context) {
-	data, err := service.GetProducts()
+	token, err := service.GetAccessTokenWithCache()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to get token"})
+		return
+	}
+
+	data, err := service.FetchProducts(token)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
