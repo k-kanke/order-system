@@ -12,6 +12,7 @@ func SetupRouter() *gin.Engine {
 	{
 		api.POST("/token", controller.GetToken)
 		api.GET("/products", controller.GetProducts)
+		api.GET("/categories", controller.GetCategories)
 	}
 
 	return r
