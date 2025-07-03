@@ -8,6 +8,7 @@ import (
 	"github.com/k-kanke/order-system/service"
 )
 
+// アクセストークン取得
 func GetToken(c *gin.Context) {
 	token, err := service.GetAccessTokenWithCache()
 	if err != nil {
@@ -17,6 +18,7 @@ func GetToken(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"access_token": token})
 }
 
+// 商品一覧取得
 func GetProducts(c *gin.Context) {
 	token, err := service.GetAccessTokenWithCache()
 	if err != nil {
@@ -32,6 +34,7 @@ func GetProducts(c *gin.Context) {
 	c.JSON(http.StatusOK, data)
 }
 
+// 部門一覧取得
 func GetCategories(c *gin.Context) {
 	token, err := service.GetAccessTokenWithCache()
 	if err != nil {
