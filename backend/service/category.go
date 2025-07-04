@@ -20,12 +20,10 @@ func FetchCategories(token string, level string) ([]model.Category, error) {
 	}
 	defer res.Body.Close()
 
-	var response struct {
-		Result []model.Category `json:"result"`
-	}
-	if err := json.NewDecoder(res.Body).Decode(&response); err != nil {
+	var categories []model.Category
+	if err := json.NewDecoder(res.Body).Decode(&categories); err != nil {
 		return nil, err
 	}
 
-	return response.Result, nil
+	return categories, nil
 }
