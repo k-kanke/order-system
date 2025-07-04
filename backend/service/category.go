@@ -9,7 +9,7 @@ import (
 	"github.com/k-kanke/order-system/model"
 )
 
-func FetchCategories(token string, level string) ([]model.Category, error) {
+func FetchCategories(token string, level string) ([]*model.Category, error) {
 	url := fmt.Sprintf("https://api.smaregi.dev/%s/pos/categories?level=%s", os.Getenv("CONTRACT_ID"), level)
 	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Add("Authorization", "Bearer "+token)
@@ -20,7 +20,7 @@ func FetchCategories(token string, level string) ([]model.Category, error) {
 	}
 	defer res.Body.Close()
 
-	var categories []model.Category
+	var categories []*model.Category
 	if err := json.NewDecoder(res.Body).Decode(&categories); err != nil {
 		return nil, err
 	}

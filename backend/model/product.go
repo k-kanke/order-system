@@ -41,3 +41,10 @@ type Product struct {
 	InsDateTime             string  `json:"insDateTime"`
 	UpdDateTime             string  `json:"updDateTime"`
 }
+
+type OutputProduct struct {
+	ID         string `json:"productId"`
+	Name       string `json:"productName"`
+	Price      string `json:"price"`
+	CategoryID string `json:"categoryId"`
+}

@@ -19,3 +19,10 @@ type Category struct {
 	InsDateTime        string  `json:"insDateTime"`
 	UpdDateTime        string  `json:"updDateTime"`
 }
+
+type OutputCategory struct {
+	ID       string            `json:"id"`
+	Name     string            `json:"name"`
+	Children []*OutputCategory `json:"children,omitempty"`
+	Products []OutputProduct   `json:"products,omitempty"`
+}

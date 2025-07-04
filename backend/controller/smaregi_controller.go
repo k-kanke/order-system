@@ -43,7 +43,7 @@ func GetCategories(c *gin.Context) {
 	}
 
 	levels := []string{"1", "2", "3"}
-	var allCategories []model.Category
+	var allCategories []*model.Category
 
 	for _, level := range levels {
 		categories, err := service.FetchCategories(token, level)

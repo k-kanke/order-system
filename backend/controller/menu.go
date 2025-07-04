@@ -16,7 +16,7 @@ func GetMenu(c *gin.Context) {
 	}
 
 	levels := []string{"1", "2", "3"}
-	var allCategories []model.Category
+	var allCategories []*model.Category
 	for _, level := range levels {
 		categories, err := service.FetchCategories(token, level)
 		if err != nil {
@@ -32,8 +32,14 @@ func GetMenu(c *gin.Context) {
 		return
 	}
 
+	// data整形
+	outputCategories := service.ConvertToOutputCategories(allCategories)
+	outputProducts := service.ConvertToOutputProducts(products)
+
+	// 商品をカテゴリに紐付け
+	service.AttachProductsToCategories(outputProducts, outputCategories)
+
 	c.JSON(http.StatusOK, gin.H{
-		"categories": allCategories,
-		"products":   products,
+		"categories": outputCategories,
 	})
 }
