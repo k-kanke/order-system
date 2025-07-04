@@ -23,6 +23,7 @@ type Category struct {
 type OutputCategory struct {
 	ID       string            `json:"id"`
 	Name     string            `json:"name"`
+	Code     string            `json:"code"`
 	Children []*OutputCategory `json:"children,omitempty"`
 	Products []OutputProduct   `json:"products,omitempty"`
 }

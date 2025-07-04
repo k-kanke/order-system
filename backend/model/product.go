@@ -47,4 +47,5 @@ type OutputProduct struct {
 	Name       string `json:"productName"`
 	Price      string `json:"price"`
 	CategoryID string `json:"categoryId"`
+	URL        string `json:"url"`
 }

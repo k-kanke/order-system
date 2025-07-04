@@ -12,6 +12,7 @@ func ConvertToOutputCategories(categories []*model.Category) []*model.OutputCate
 		categoryMap[c.CategoryID] = &model.OutputCategory{
 			ID:       c.CategoryID,
 			Name:     c.CategoryName,
+			Code:     c.CategoryCode,
 			Children: []*model.OutputCategory{},
 			Products: []model.OutputProduct{},
 		}
@@ -25,7 +26,6 @@ func ConvertToOutputCategories(categories []*model.Category) []*model.OutputCate
 		} else {
 			parent := categoryMap[c.ParentCategoryID]
 			if parent != nil {
-				// Children は []*Category ではなく OutputCategory でも可
 				parent.Children = append(parent.Children, categoryMap[c.CategoryID])
 			}
 		}
@@ -41,6 +41,7 @@ func ConvertToOutputProducts(products []model.Product) []model.OutputProduct {
 			Name:       p.ProductName,
 			Price:      p.Price,
 			CategoryID: p.CategoryID,
+			URL:        *p.URL,
 		})
 	}
 	return result
