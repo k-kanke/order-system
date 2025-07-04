@@ -36,12 +36,17 @@ func ConvertToOutputCategories(categories []*model.Category) []*model.OutputCate
 func ConvertToOutputProducts(products []model.Product) []model.OutputProduct {
 	var result []model.OutputProduct
 	for _, p := range products {
+		url := ""
+		if p.URL != nil {
+			url = *p.URL
+		}
+
 		result = append(result, model.OutputProduct{
 			ID:         p.ProductID,
 			Name:       p.ProductName,
 			Price:      p.Price,
 			CategoryID: p.CategoryID,
-			URL:        *p.URL,
+			URL:        url,
 		})
 	}
 	return result
