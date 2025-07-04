@@ -11,6 +11,7 @@ import { GolfRoomGrid } from "../components/GolfRoomGrid";
 import { BookingModal } from "../components/BookingModal";
 import { FooterTabBar } from "../components/FooterTabBar";
 import { CategorySidebar } from "../components/CategorySidebar";
+import { topLevelCategoryFromCode } from "../utils/CategoryUtils";
 
 export function HomePage() {
     const [topTab, setTopTab] = useState<Tab>('ドリンク');
@@ -24,6 +25,7 @@ export function HomePage() {
     const [bottomTab, setBottomTab] = useState<'menu' | 'cart' | 'call'>('menu');
     const [sidebarCategory, setSidebarCategory] = useState<SubCategory>('おすすめ');
     const [manualHighlight, setManualHighlight] = useState(true);
+    const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
     const [hasDrinkOrder, setHasDrinkOrder] = useState(false);
     const [hasFoodOrder, setHasFoodOrder] = useState(false);
@@ -77,7 +79,8 @@ export function HomePage() {
       return () => clearTimeout(timeout);
     }, [topTab]);
 
-    const filteredMenu = TEST_MENU.filter(item => {
+    // 現在はtestMenu.tsで定義したものを利用してるから今後拡張する
+    const filteredMenu = menuItems.filter(item => {
       // topTabが「ゴルフ」の場合
       if (topTab === 'ゴルフ') {
         return false;
@@ -85,6 +88,42 @@ export function HomePage() {
 
       return item.category === topTab;
     });
+
+    // api叩いてデータ取得
+    useEffect(() => {
+      async function fetchMenu() {
+        const res = await fetch("/api/menu")
+        const json = await res.json();
+        const { categories, products } = json;
+
+        const categoryMap = new Map<string, string>(); // categoryId → カテゴリ名
+        categories.forEach((cat: any) => {
+          categoryMap.set(cat.categoryId, cat.categoryName);
+        });
+
+        const transformedMenu = products.map((product: any) => {
+          const categoryName = categoryMap.get(product.categoryId) || 'その他';
+          return {
+            id: parseInt(product.productId),
+            name: product.productName,
+            price: parseInt(product.price),
+            category: topLevelCategoryFromCode(product.categoryId), // 例: "ドリンク" or "フード"
+            subCategory: categoryName,
+            sizes: [
+              {
+                label: 'デフォルト',
+                price: parseInt(product.price),
+              }
+            ],
+            isRecommended: false,
+          };
+        });
+
+        setMenuItems(transformedMenu); // TEST_MENUの代わり
+      }
+
+      fetchMenu();
+    }, [])
 
     // スクロールスパイのロジック
     useEffect(() => {
