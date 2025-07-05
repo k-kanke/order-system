@@ -6,12 +6,12 @@ import { FooterBar } from "../components/FooterBar";
 import type { MenuItem, CartItem, Tab, GolfRoom, SubCategory } from "../types/MenuItem";
 import { CartModal } from "../components/CartModal";
 import { SelectedItemModal } from "../components/SelectedItemModal";
-import { GOLF_ROOMS, TEST_MENU } from "../data/testMenu";
+import { GOLF_ROOMS } from "../data/testMenu";
 import { GolfRoomGrid } from "../components/GolfRoomGrid";
 import { BookingModal } from "../components/BookingModal";
 import { FooterTabBar } from "../components/FooterTabBar";
 import { CategorySidebar } from "../components/CategorySidebar";
-import { topLevelCategoryFromCode } from "../utils/CategoryUtils";
+import { flattenCategories } from "../utils/CategoryUtils";
 
 export function HomePage() {
     const [topTab, setTopTab] = useState<Tab>('ドリンク');
@@ -84,7 +84,7 @@ export function HomePage() {
       // topTabが「ゴルフ」の場合
       if (topTab === 'ゴルフ') {
         return false;
-      } 
+      }
 
       return item.category === topTab;
     });
@@ -92,34 +92,13 @@ export function HomePage() {
     // api叩いてデータ取得
     useEffect(() => {
       async function fetchMenu() {
-        const res = await fetch("/api/menu")
+        const res = await fetch("http://localhost:8080/api/menu")
         const json = await res.json();
-        const { categories, products } = json;
+        const { categories } = json;
 
-        const categoryMap = new Map<string, string>(); // categoryId → カテゴリ名
-        categories.forEach((cat: any) => {
-          categoryMap.set(cat.categoryId, cat.categoryName);
-        });
+        const transformedMenu = flattenCategories(categories);
 
-        const transformedMenu = products.map((product: any) => {
-          const categoryName = categoryMap.get(product.categoryId) || 'その他';
-          return {
-            id: parseInt(product.productId),
-            name: product.productName,
-            price: parseInt(product.price),
-            category: topLevelCategoryFromCode(product.categoryId), // 例: "ドリンク" or "フード"
-            subCategory: categoryName,
-            sizes: [
-              {
-                label: 'デフォルト',
-                price: parseInt(product.price),
-              }
-            ],
-            isRecommended: false,
-          };
-        });
-
-        setMenuItems(transformedMenu); // TEST_MENUの代わり
+        setMenuItems(transformedMenu); 
       }
 
       fetchMenu();
