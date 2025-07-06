@@ -38,9 +38,9 @@ export function ExpandableMenuCard({
     };
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden w-full p-3">
+    <div className="bg-white rounded-2xl shadow-lg overflow-hidden w-full p-4 flex-col gap-4">
         {/* 上部の画像 */}
-        <div className="w-full aspect-square bg-gray-100 overflow-hidden rounded-lg">
+        <div className="w-5/6 mx-auto aspect-square bg-gray-100 overflow-hidden rounded-xl mb-4">
             <img
                 src="/placeholder.jpg"
                 // alt={category.name}
@@ -54,9 +54,9 @@ export function ExpandableMenuCard({
             {category.products.map((product) => (
                 <div
                     key={product.productId}
-                    className={`flex justify-between items-center py-1 px-2 rounded cursor-pointer ${
+                    className={`flex justify-between items-center px-3 py-2 rounded-lg transition-colors cursor-pointer ${
                     selectedProduct?.productId === product.productId
-                        ? "bg-blue-100 font-bold"
+                        ? "bg-blue-100 text-blue-900 font-semibold"
                         : "hover:bg-gray-100"
                     }`}
                     onClick={() => handleProductSelect(product)}
@@ -70,18 +70,18 @@ export function ExpandableMenuCard({
         
         {/* 数量選択 */}
         {selectedProduct && (
-            <div className="mt-3 flex flex-col items-center gap-2">
+            <div className="mt-2 flex flex-col items-center gap-3">
                 <div className="flex justify-center items-center gap-4">
                     <button
                         onClick={() => setCount((c) => (c > 1 ? c - 1 : 1))}
-                        className="text-lg w-8 h-8 rounded-full bg-gray-200"
+                        className="w-9 h-9 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center text-xl"
                     >
                         -
                     </button>
                     <span className="text-xl font-bold">{count}</span>
                     <button
                         onClick={() => setCount((c) => c + 1)}
-                        className="text-lg w-8 h-8 rounded-full bg-gray-200"
+                        className="w-9 h-9 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center text-xl"
                     >
                         +
                     </button>
@@ -89,7 +89,7 @@ export function ExpandableMenuCard({
 
                 <button
                     onClick={handleConfirm}
-                    className="mt-2 w-full py-2 bg-blue-500 text-white font-semibold rounded shadow"
+                    className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl shadow transition-colors"
                 >
                     カートに追加
                 </button>
