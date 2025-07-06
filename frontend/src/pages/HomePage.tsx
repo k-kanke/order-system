@@ -11,7 +11,7 @@ import { GolfRoomGrid } from "../components/GolfRoomGrid";
 import { BookingModal } from "../components/BookingModal";
 import { FooterTabBar } from "../components/FooterTabBar";
 import { CategorySidebar } from "../components/CategorySidebar";
-import { convertProductToMenuItem, flattenCategories } from "../utils/CategoryUtils";
+import { flattenCategories } from "../utils/CategoryUtils";
 import { MainCategoryBlock } from "../components/MainCategoryBlock";
 
 export function HomePage() {
@@ -364,18 +364,22 @@ export function HomePage() {
                       })
                       .map(cat => (
                         <MainCategoryBlock
-                          key={cat.id}
+                          // key={cat.id}
                           category={cat}
-                          onSelectProduct={(product) => {
-                            // productをcartモーダルに合うように型を変更
-                            const item = convertProductToMenuItem(
-                              product,
-                              topTab,
-                              cat.name as SubCategory,     
-                              // product.productName
-                            );
-                            setSelectedItem(item);
-                          }}
+                          onConfirm={(item, count, selectedSize) => {
+                            console.log(" カート追加要求", item, count, selectedSize);
+                            setCart(prev => {
+                              const existing = prev.find(c => c.id === item.id && c.selectedSize.label === selectedSize.label);
+                              if (existing) {
+                                return prev.map(c =>
+                                  c.id === item.id && c.selectedSize.label === selectedSize.label
+                                    ? { ...c, count: c.count + count }
+                                    : c
+                                );
+                              }
+                              return [...prev, { ...item, count, selectedSize }];
+                            });
+                          }}      
                         />
                       ))
                     }

@@ -1,14 +1,15 @@
 import { useState } from "react";
-import type { MenuCategory, Product, TopCategory } from "../types/MenuItem";
+import type { MenuCategory, MenuItem, TopCategory } from "../types/MenuItem";
 import { ExpandableMenuCard } from "./ExpandableMenuCard";
-// import { SubCategoryBlock } from "./SubCategoryBlock";
 
 export function MainCategoryBlock({ 
         category,
-        onSelectProduct,
+        // onSelectProduct,
+        onConfirm,
     }: { 
         category: TopCategory;
-        onSelectProduct: (product: Product) => void;
+        // onSelectProduct: (product: Product) => void;
+        onConfirm: (item: MenuItem, count: number, selectedSize: { label: string; price: number }) => void;
     }) {
     
         const [selectedMenuCategory, setSelectedMenuCategory] = useState<MenuCategory | null>(null);
@@ -24,7 +25,7 @@ export function MainCategoryBlock({
                     {category.children.flatMap(sub => (
                         <div key={sub.id}>
                             {!sub.name.includes(category.name) && (
-                                <h4 className="text-sm font-semibold text-gray-600 px-1 mb-1">{sub.name}</h4>
+                                <h3 className="text-sm font-semibold text-gray-600 px-1 mb-1">{sub.name}</h3>
                             )}
 
                             <div className="grid grid-cols-2 gap-4">
@@ -66,11 +67,11 @@ export function MainCategoryBlock({
           
                         <ExpandableMenuCard
                             category={selectedMenuCategory}
-                            onSelectProduct={(product) => {
-                                onSelectProduct(product);
-                                setSelectedMenuCategory(null); // モーダル閉じる
+                            topCategoryName={category.name}
+                            onConfirm={(item, count, selectedSize) => {
+                                onConfirm(item, count, selectedSize);
+                                setSelectedMenuCategory(null); // カートを閉じる
                             }}
-                            forceExpanded
                         />
                     </div>
                 )}
