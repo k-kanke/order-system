@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"net/url"
 	"os"
@@ -27,6 +28,9 @@ func GetAccessTokenWithCache() (string, error) {
 	if cachedToken != "" && time.Since(cachedTokenTime) < time.Hour {
 		return cachedToken, nil
 	}
+
+	// デバッグ用
+	log.Println("[try to get new token (debug)]")
 
 	// 新しく取得
 	data := url.Values{}

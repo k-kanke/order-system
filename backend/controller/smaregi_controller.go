@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/k-kanke/order-system/model"
 	"github.com/k-kanke/order-system/service"
 )
 
@@ -26,7 +25,7 @@ func GetProducts(c *gin.Context) {
 		return
 	}
 
-	data, err := service.FetchProducts(token)
+	data, err := service.FetchProductsWithCache(token)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -42,16 +41,10 @@ func GetCategories(c *gin.Context) {
 		return
 	}
 
-	levels := []string{"1", "2", "3"}
-	var allCategories []*model.Category
-
-	for _, level := range levels {
-		categories, err := service.FetchCategories(token, level)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			return
-		}
-		allCategories = append(allCategories, categories...)
+	allCategories, err := service.FetchCategoriesWithCache(token)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
 	c.JSON(http.StatusOK, allCategories)

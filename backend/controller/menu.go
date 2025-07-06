@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/k-kanke/order-system/model"
 	"github.com/k-kanke/order-system/service"
 )
 
@@ -15,25 +14,20 @@ func GetMenu(c *gin.Context) {
 		return
 	}
 
-	levels := []string{"1", "2", "3"}
-	var allCategories []*model.Category
-	for _, level := range levels {
-		categories, err := service.FetchCategories(token, level)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			return
-		}
-		allCategories = append(allCategories, categories...)
+	categories, err := service.FetchCategoriesWithCache(token)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
-	products, err := service.FetchProducts(token)
+	products, err := service.FetchProductsWithCache(token)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
 	// data整形
-	outputCategories := service.ConvertToOutputCategories(allCategories)
+	outputCategories := service.ConvertToOutputCategories(categories)
 	outputProducts := service.ConvertToOutputProducts(products)
 
 	// 商品をカテゴリに紐付け
