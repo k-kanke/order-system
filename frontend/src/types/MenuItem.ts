@@ -34,3 +34,27 @@ export interface GolfRoom {
   description: string;
   imageUrl: string; 
 }
+
+export type Product = {
+  productId: string;
+  productName: string;
+  price: string;
+};
+
+export type MenuCategory = {
+  id: string;
+  name: string;
+  products: Product[];
+};
+
+export type SubCategory2 = {
+  id: string;
+  name: string;
+  children: MenuCategory[];
+};
+
+export type TopCategory = {
+  id: string;
+  name: string;
+  children: SubCategory2[];
+};

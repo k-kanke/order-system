@@ -1,9 +1,9 @@
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import Header from "../components/Header";
 import { Tabs } from "../components/Tabs";
-import { MenuGrid } from "../components/MenuGrid";
+//import { MenuGrid } from "../components/MenuGrid";
 import { FooterBar } from "../components/FooterBar";
-import type { MenuItem, CartItem, Tab, GolfRoom, SubCategory } from "../types/MenuItem";
+import type { MenuItem, CartItem, Tab, GolfRoom, SubCategory, TopCategory } from "../types/MenuItem";
 import { CartModal } from "../components/CartModal";
 import { SelectedItemModal } from "../components/SelectedItemModal";
 import { GOLF_ROOMS } from "../data/testMenu";
@@ -12,6 +12,7 @@ import { BookingModal } from "../components/BookingModal";
 import { FooterTabBar } from "../components/FooterTabBar";
 import { CategorySidebar } from "../components/CategorySidebar";
 import { flattenCategories } from "../utils/CategoryUtils";
+import { MainCategoryBlock } from "../components/MainCategoryBlock";
 
 export function HomePage() {
     const [topTab, setTopTab] = useState<Tab>('ドリンク');
@@ -41,6 +42,8 @@ export function HomePage() {
       }
       return [];
     }, [topTab, hasDrinkOrder, hasFoodOrder]);
+
+    const [categories, setCategories] = useState<TopCategory[]>([]);
 
     // topTabが変更されたら、sidebarCategoryを適切な初期値に設定
     useEffect(() => {
@@ -96,7 +99,14 @@ export function HomePage() {
         const json = await res.json();
         const { categories } = json;
 
+        // debug
+        // console.log("[debug] categories: ", categories)
+        setCategories(categories)
+
         const transformedMenu = flattenCategories(categories);
+
+        // debug
+        //console.log("[debug] transformedMenu: ", transformedMenu)
 
         setMenuItems(transformedMenu); 
       }
@@ -275,7 +285,7 @@ export function HomePage() {
     }, 0);
 
     // おすすめメニュー抽出
-    const recommendedItems = filteredMenu.filter(item => item.isRecommended);
+    // const recommendedItems = filteredMenu.filter(item => item.isRecommended);
 
     return (
         <div className="h-screen w-screen flex flex-col">
@@ -320,6 +330,10 @@ export function HomePage() {
                   />
                 ) : (
                   <div className="flex-1 overflow-y-auto bg-white">
+                    {categories.map(cat => (
+                      <MainCategoryBlock key={cat.id} category={cat} />
+                    ))}
+                    {/*
                     <MenuGrid
                       items={filteredMenu}
                       recomendedItems={recommendedItems}
@@ -327,6 +341,7 @@ export function HomePage() {
                       topTab={topTab}
                       orderHistory={orderHistory}
                     />
+                    */}
                   </div>
                 )}
               </div>
