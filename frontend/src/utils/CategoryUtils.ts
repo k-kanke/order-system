@@ -1,4 +1,4 @@
-import type { MenuItem } from "../types/MenuItem";
+import type { MenuItem, Product } from "../types/MenuItem";
 
 export function topLevelCategoryFromCode(categoryIdOrCode: string): 'ドリンク' | 'フード' | 'その他' {
     // 部門コードが "d" で始まる → ドリンク、"f" → フード
@@ -45,4 +45,26 @@ export function flattenCategories(categories: any[], topLevelCode: string | null
     }
 
     return items;
+}
+
+export function convertProductToMenuItem(
+  product: Product,
+  categoryName: string,      // 例: 'ドリンク'
+  subCategory: string,   // 例: 'ビール'
+  // menuName: string           // 例: 'アサヒスーパードライ'
+): MenuItem {
+  return {
+    id: Number(product.productId),
+    name: product.productName,
+    category: categoryName as "ドリンク" | "フード",
+    subCategory,
+    sizes: [
+      {
+        label: "default",
+        price: Number(product.price),
+      },
+    ],
+    imageUrl: product.url || "/placeholder.jpg",
+    isRecommended: false, // 必要に応じて付与
+  };
 }

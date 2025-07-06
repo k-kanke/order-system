@@ -11,7 +11,7 @@ import { GolfRoomGrid } from "../components/GolfRoomGrid";
 import { BookingModal } from "../components/BookingModal";
 import { FooterTabBar } from "../components/FooterTabBar";
 import { CategorySidebar } from "../components/CategorySidebar";
-import { flattenCategories } from "../utils/CategoryUtils";
+import { convertProductToMenuItem, flattenCategories } from "../utils/CategoryUtils";
 import { MainCategoryBlock } from "../components/MainCategoryBlock";
 
 export function HomePage() {
@@ -26,14 +26,18 @@ export function HomePage() {
     const [bottomTab, setBottomTab] = useState<'menu' | 'cart' | 'call'>('menu');
     const [sidebarCategory, setSidebarCategory] = useState<SubCategory>('おすすめ');
     const [manualHighlight, setManualHighlight] = useState(true);
-    const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+    // const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
     const [hasDrinkOrder, setHasDrinkOrder] = useState(false);
     const [hasFoodOrder, setHasFoodOrder] = useState(false);
 
+    const [categories, setCategories] = useState<TopCategory[]>([]);
+
+
     const scrollTimeoutRef = useRef<number | null>(null); 
     const mainContentScrollRef = useRef<HTMLDivElement>(null);
 
+    {/*
     const currentSidebarCategories = useMemo(() => {
       if (topTab === 'ドリンク') {
         return ['おすすめ', ...(hasDrinkOrder ? ['おかわり'] : []), 'ビール', 'サワー', 'ワイン', 'ハイボール', 'ソフトドリンク'] as SubCategory[];
@@ -42,8 +46,18 @@ export function HomePage() {
       }
       return [];
     }, [topTab, hasDrinkOrder, hasFoodOrder]);
+    */}
 
-    const [categories, setCategories] = useState<TopCategory[]>([]);
+    const currentSidebarCategories = useMemo(() => {
+      const currentTopCategory = categories.find(c => c.name === topTab);
+      if (!currentTopCategory) return [];
+  
+      const base = currentTopCategory.children.flatMap(sub => sub.children.map(menu => menu.name));
+      const specials = ['おすすめ'];
+      if (topTab === 'ドリンク' && hasDrinkOrder) specials.push('おかわり');
+      if (topTab === 'フード' && hasFoodOrder) specials.push('おかわり');
+      return [...specials, ...base];
+    }, [categories, topTab, hasDrinkOrder, hasFoodOrder]); 
 
     // topTabが変更されたら、sidebarCategoryを適切な初期値に設定
     useEffect(() => {
@@ -83,6 +97,7 @@ export function HomePage() {
     }, [topTab]);
 
     // 現在はtestMenu.tsで定義したものを利用してるから今後拡張する
+    {/*
     const filteredMenu = menuItems.filter(item => {
       // topTabが「ゴルフ」の場合
       if (topTab === 'ゴルフ') {
@@ -91,6 +106,7 @@ export function HomePage() {
 
       return item.category === topTab;
     });
+    */}
 
     // api叩いてデータ取得
     useEffect(() => {
@@ -100,15 +116,15 @@ export function HomePage() {
         const { categories } = json;
 
         // debug
-        // console.log("[debug] categories: ", categories)
+        console.log("[debug] categories: ", categories)
         setCategories(categories)
 
         const transformedMenu = flattenCategories(categories);
 
         // debug
-        //console.log("[debug] transformedMenu: ", transformedMenu)
+        console.log("[debug] transformedMenu: ", transformedMenu)
 
-        setMenuItems(transformedMenu); 
+        // setMenuItems(transformedMenu); 
       }
 
       fetchMenu();
@@ -330,9 +346,32 @@ export function HomePage() {
                   />
                 ) : (
                   <div className="flex-1 overflow-y-auto bg-white">
-                    {categories.map(cat => (
-                      <MainCategoryBlock key={cat.id} category={cat} />
-                    ))}
+                    {categories
+                      .filter(cat => {
+                        if (topTab === 'ドリンク') {
+                          return cat.code.startsWith('d')
+                        }
+                        if (topTab === 'フード') {
+                          return cat.code.startsWith('f')
+                        }
+                      })
+                      .map(cat => (
+                        <MainCategoryBlock
+                          key={cat.id}
+                          category={cat}
+                          onSelectProduct={(product) => {
+                            // productをcartモーダルに合うように型を変更
+                            const item = convertProductToMenuItem(
+                              product,
+                              topTab,
+                              cat.name as SubCategory,     
+                              // product.productName
+                            );
+                            setSelectedItem(item);
+                          }}
+                        />
+                      ))
+                    }
                     {/*
                     <MenuGrid
                       items={filteredMenu}

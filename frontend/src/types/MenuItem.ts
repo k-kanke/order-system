@@ -1,8 +1,12 @@
 export type Tab = 'ゴルフ' | 'ドリンク' | 'フード';
 
+{/*
 export type SubCategory =
   'おすすめ' | 'ビール' | 'ソフトドリンク' | 'サワー' | 'ハイボール' | 'ワイン' |
   '軽食' | '揚げ物' | 'ご飯もの' | 'デザート';
+*/}
+
+export type SubCategory = string;
 
 export type MenuItem = {
     id: number;
@@ -39,6 +43,7 @@ export type Product = {
   productId: string;
   productName: string;
   price: string;
+  url: string;
 };
 
 export type MenuCategory = {
@@ -56,5 +61,6 @@ export type SubCategory2 = {
 export type TopCategory = {
   id: string;
   name: string;
+  code: string;
   children: SubCategory2[];
 };
