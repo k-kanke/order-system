@@ -16,7 +16,7 @@ var (
 	cachedCategories     []*model.Category
 	cachedCategoriesTime time.Time
 	categoriesMu         sync.Mutex
-	categoriesTTL        = 30 * time.Minute
+	categoriesTTL        = 60 * time.Minute
 )
 
 func FetchCategoriesWithCache(token string) ([]*model.Category, error) {
