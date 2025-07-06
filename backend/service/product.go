@@ -16,7 +16,7 @@ var (
 	cachedProducts     []model.Product
 	cachedProductsTime time.Time
 	productsMu         sync.Mutex
-	productsTTL        = 10 * time.Minute
+	productsTTL        = 30 * time.Minute
 )
 
 func FetchProductsWithCache(token string) ([]model.Product, error) {
