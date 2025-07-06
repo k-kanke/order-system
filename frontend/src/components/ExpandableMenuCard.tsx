@@ -1,27 +1,23 @@
-import { useState } from "react";
 import type { MenuCategory, Product } from "../types/MenuItem";
 
 export function ExpandableMenuCard({
   category,
   onSelectProduct,
+  forceExpanded = false,
 }: {
   category: MenuCategory;
   onSelectProduct: (product: Product) => void;
+  forceExpanded?: boolean;
 }) {
-  const [expanded, setExpanded] = useState(false);
+  const expanded = forceExpanded || false;
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden w-full">
-      <div
-        className="cursor-pointer"
-        onClick={() => setExpanded(prev => !prev)}
-      >
-        <div className="p-2">
-          <h4 className="text-base font-bold">{category.name}</h4>
-        </div>
+      <div className="p-2">
+        <h4 className="text-base font-bold">{category.name}</h4>
       </div>
 
-      {expanded && (
+      {(expanded || forceExpanded) && (
         <div className="border-t border-gray-200 p-2">
           {category.products.map(product => (
             <div
@@ -38,3 +34,4 @@ export function ExpandableMenuCard({
     </div>
   );
 }
+    
