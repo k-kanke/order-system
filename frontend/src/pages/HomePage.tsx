@@ -49,13 +49,20 @@ export function HomePage() {
     */}
 
     const currentSidebarCategories = useMemo(() => {
-      const currentTopCategory = categories.find(c => c.name === topTab);
-      if (!currentTopCategory) return [];
+      const base = categories
+        .filter(c => {
+          if (!c.code) return false;
+          if (topTab === 'ドリンク') return c.code.startsWith('d')
+          if (topTab === 'フード') return c.code.startsWith('f')
+          return false;
+        })
+        .map(c => c.name);
   
-      const base = currentTopCategory.children.flatMap(sub => sub.children.map(menu => menu.name));
-      const specials = ['おすすめ'];
-      if (topTab === 'ドリンク' && hasDrinkOrder) specials.push('おかわり');
-      if (topTab === 'フード' && hasFoodOrder) specials.push('おかわり');
+      const specials = [];
+      if ((topTab === 'ドリンク' && hasDrinkOrder) || (topTab === 'フード' && hasFoodOrder)) {
+        specials.push('おかわり');
+      }
+
       return [...specials, ...base];
     }, [categories, topTab, hasDrinkOrder, hasFoodOrder]); 
 
