@@ -283,6 +283,9 @@ export function HomePage() {
         // 注文履歴に一回一回のオーダー単位で追加
         setOrderHistory(prev => [[...cart], ...prev]);
 
+        // debug
+        // console.log("[debug] cart:", cart)
+
         // カートにドリンクがあれば「おかわり」タブを表示
         if (cart.some(item => item.category === 'ドリンク')) {
           setHasDrinkOrder(true);
@@ -310,6 +313,19 @@ export function HomePage() {
     // おすすめメニュー抽出
     // const recommendedItems = filteredMenu.filter(item => item.isRecommended);
 
+    // おかわりメニュー
+    const drinkOeder = useMemo(() => {
+      return orderHistory
+        .flat()
+        .filter(item => item.category === 'ドリンク');
+    }, [orderHistory]);
+
+    const foodOrder = useMemo(() => {
+      return orderHistory
+        .flat()
+        .filter(item => item.category === 'フード');
+    }, [orderHistory]);
+ 
     return (
         <div className="h-screen w-screen flex flex-col">
           
@@ -353,6 +369,37 @@ export function HomePage() {
                   />
                 ) : (
                   <div className="flex-1 overflow-y-auto bg-white">
+                    {/* おかわりブロック（サイドバーに "おかわり" があるとき） */}
+                    {currentSidebarCategories.includes('おかわり') && (
+                      <MainCategoryBlock
+                        key="okawari"
+                        category={{
+                          id: 'okawari',
+                          name: 'おかわり',
+                          code: 'special-okawari',
+                          children: [],
+                        }}
+                        topTab={topTab}
+                        drinkOrder={orderHistory.flat().filter(item => item.category === 'ドリンク')}
+                        foodOrder={orderHistory.flat().filter(item => item.category === 'フード')}
+                        onConfirm={(item, count, selectedSize) => {
+                          console.log("カート追加要求（おかわり）", item, count, selectedSize);
+                          setCart(prev => {
+                            const existing = prev.find(c => c.id === item.id && c.selectedSize.label === selectedSize.label);
+                            if (existing) {
+                              return prev.map(c =>
+                                c.id === item.id && c.selectedSize.label === selectedSize.label
+                                  ? { ...c, count: c.count + count }
+                                  : c
+                              );
+                            }
+                            return [...prev, { ...item, count, selectedSize }];
+                          });
+                        }}
+                      />
+                    )}
+
+                    {/* おかわりタブがない時 */}
                     {categories
                       .filter(cat => {
                         if (topTab === 'ドリンク') {
@@ -379,7 +426,10 @@ export function HomePage() {
                               }
                               return [...prev, { ...item, count, selectedSize }];
                             });
-                          }}      
+                            }}
+                          drinkOrder={drinkOeder}
+                          foodOrder={foodOrder}  
+                          topTab={topTab}    
                         />
                       ))
                     }

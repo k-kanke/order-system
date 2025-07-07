@@ -19,16 +19,15 @@ export function ExpandableMenuCard({
 
     const handleProductSelect = (product: Product) => {
         setSelectedProduct(product);
-        setSelectedSize({ label: "default", price: Number(product.price) });
+        setSelectedSize({ label: "drink", price: Number(product.price) });
         setCount(1);
     };
     
     const handleConfirm = () => {
-        console.log("[debug] handleConfirm が実行されました ")
         if (selectedProduct && selectedSize) {
             const item = convertProductToMenuItem(
                 selectedProduct,
-                topCategoryName, // or "フード"（必要に応じて）
+                topCategoryName, 
                 category.name,
                 // selectedProduct.productName
             );
