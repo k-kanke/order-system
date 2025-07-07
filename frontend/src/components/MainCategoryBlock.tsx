@@ -81,7 +81,7 @@ export function MainCategoryBlock({
                 {/* 商品表示 */}
                 {category.name !== 'おかわり' && (
                     <>
-                        <h3 className="flex text-2xl items-center font-bold px-2 mb-2">
+                        <h3 className="flex text-2xl items-center font-bold px-2 mb-1">
                             {category.name}
                             <span className="flex-grow ml-2 border-t border-dashed border-gray-300"/>
                         </h3>                
@@ -90,10 +90,10 @@ export function MainCategoryBlock({
                             {category.children.flatMap(sub => (
                                 <div key={sub.id}>
                                     {!sub.name.includes(category.name) && (
-                                        <h3 className="text-sm font-semibold text-gray-600 px-1 mb-1">{sub.name}</h3>
+                                        <h2 className="text-base font-semibold text-gray-600 px-1 mb-1 mt-2">{sub.name}</h2>
                                     )}
 
-                                    <div className="grid grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-2 gap-4 mb-5">
                                         {sub.children.map(menu => (
                                             <div
                                                 key={menu.id}
