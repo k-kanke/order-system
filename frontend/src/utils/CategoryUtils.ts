@@ -68,3 +68,13 @@ export function convertProductToMenuItem(
     isRecommended: false, // 必要に応じて付与
   };
 }
+
+
+export function convertMenuItemToProduct(item: MenuItem): Product {
+  return {
+    productId: String(item.id),        // ProductのproductIdは文字列の想定
+    productName: item.name,
+    price: `{item.sizes.price}`,  // sizes配列の最初のpriceを使う
+    url: item.imageUrl,
+  };
+}

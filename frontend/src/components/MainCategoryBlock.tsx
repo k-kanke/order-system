@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { MenuCategory, MenuItem, TopCategory } from "../types/MenuItem";
 import { ExpandableMenuCard } from "./ExpandableMenuCard";
+// import { convertMenuItemToProduct} from "../utils/CategoryUtils";
 
 export function MainCategoryBlock({ 
         category,
@@ -30,7 +31,11 @@ export function MainCategoryBlock({
         // console.log("[debug] foodOrder???:", foodOrder)
 
         const reorderItems: MenuItem[] = (topTab === 'ドリンク' ? drinkOrder : foodOrder) ?? [];
+        // console.log("[debug] recorderItems!!!:", reorderItems)
 
+        console.log("[debug] categories!!!:", category)
+
+        
         return (
             <section id={category.name} className="flex flex-col gap-y-4 px-2 pb-6">
                 {/* おかわり表示（カテゴリが "おかわり" のときだけ） */}
@@ -40,12 +45,35 @@ export function MainCategoryBlock({
                             おかわり
                             <span className="flex-grow ml-2 border-t border-dashed border-gray-300"/>
                         </h3>
-                        <div className="grid grid-cols-2 gap-4">
-                            {reorderItems.map(item => (
-                                <div>
-                                    <div>{item.name}</div>
-                                </div>
-                            ))}
+                        
+                        <div className="flex flex-col gap-4">
+                            {category.children.flatMap(sub =>
+                                sub.children
+                                    .filter(menu => {
+                                        const matched = reorderItems.some(item => item.subCategory === menu.name);
+                                        console.log(`[debug] checking menu.name="${menu.name}" → matched:`, matched);
+                                        return matched;
+                                    })
+                                    .map(menu => {
+                                        console.log(`[debug] rendering menu.name="${menu.name}"`);
+                                        return (
+                                            <div
+                                                key={`reorder-${menu.id}`}
+                                                className="cursor-pointer border rounded shadow p-2 text-sm"
+                                                onClick={() => setSelectedMenuCategory(menu)}
+                                            >
+                                                <img
+                                                    src="/placeholder.jpg"
+                                                    className="w-full h-32 object-cover mb-1"
+                                                    alt={menu.name}
+                                                />
+                                                <div className="text-start text-xs font-semibold min-h-[2rem] flex items-center">
+                                                    {menu.name}
+                                                </div>
+                                            </div>
+                                        )
+                                    })
+                            )}
                         </div>
                     </>
                 )}

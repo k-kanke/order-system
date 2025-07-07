@@ -377,7 +377,18 @@ export function HomePage() {
                           id: 'okawari',
                           name: 'おかわり',
                           code: 'special-okawari',
-                          children: [],
+                          children: categories
+                            .filter(cat => cat.code.startsWith(topTab === 'ドリンク' ? 'd' : 'f')) // ドリンク or フードのカテゴリに限定
+                            .flatMap(cat => cat.children) // サブカテゴリ
+                            .map(sub => ({
+                              ...sub,
+                              children: sub.children.filter(menu =>
+                                orderHistory
+                                  .flat()
+                                  .some(item => item.subCategory === menu.name && item.category === topTab)
+                              )
+                            }))
+                            .filter(sub => sub.children.length > 0) // 商品が1つでもマッチするメニューのみ
                         }}
                         topTab={topTab}
                         drinkOrder={orderHistory.flat().filter(item => item.category === 'ドリンク')}
@@ -385,7 +396,9 @@ export function HomePage() {
                         onConfirm={(item, count, selectedSize) => {
                           console.log("カート追加要求（おかわり）", item, count, selectedSize);
                           setCart(prev => {
-                            const existing = prev.find(c => c.id === item.id && c.selectedSize.label === selectedSize.label);
+                            const existing = prev.find(
+                              c => c.id === item.id && c.selectedSize.label === selectedSize.label
+                            );
                             if (existing) {
                               return prev.map(c =>
                                 c.id === item.id && c.selectedSize.label === selectedSize.label
