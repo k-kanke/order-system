@@ -33,7 +33,7 @@ export function MainCategoryBlock({
         const reorderItems: MenuItem[] = (topTab === 'ドリンク' ? drinkOrder : foodOrder) ?? [];
         // console.log("[debug] recorderItems!!!:", reorderItems)
 
-        console.log("[debug] categories!!!:", category)
+        // console.log("[debug] categories!!!:", category)
 
         
         return (
@@ -46,28 +46,28 @@ export function MainCategoryBlock({
                             <span className="flex-grow ml-2 border-t border-dashed border-gray-300"/>
                         </h3>
                         
-                        <div className="flex flex-col gap-4">
+                        <div className="grid grid-cols-2 gap-4">
                             {category.children.flatMap(sub =>
                                 sub.children
                                     .filter(menu => {
                                         const matched = reorderItems.some(item => item.subCategory === menu.name);
-                                        console.log(`[debug] checking menu.name="${menu.name}" → matched:`, matched);
+                                        // console.log(`[debug] checking menu.name="${menu.name}" → matched:`, matched);
                                         return matched;
                                     })
                                     .map(menu => {
-                                        console.log(`[debug] rendering menu.name="${menu.name}"`);
+                                        // onsole.log(`[debug] rendering menu.name="${menu.name}"`);
                                         return (
                                             <div
                                                 key={`reorder-${menu.id}`}
-                                                className="cursor-pointer border rounded shadow p-2 text-sm"
+                                                className="cursor-pointer"
                                                 onClick={() => setSelectedMenuCategory(menu)}
                                             >
                                                 <img
                                                     src="/placeholder.jpg"
-                                                    className="w-full h-32 object-cover mb-1"
-                                                    alt={menu.name}
+                                                    className="w-full h-32 object-cover"
+                                                    // alt={menu.name}
                                                 />
-                                                <div className="text-start text-xs font-semibold min-h-[2rem] flex items-center">
+                                                <div className="text-start shadow-md p-2 rounded text-xs font-semibold min-h-[2rem] flex items-center justify-start">
                                                     {menu.name}
                                                 </div>
                                             </div>
