@@ -368,7 +368,7 @@ export function HomePage() {
                     onBook={handleBookGolfRoom}
                   />
                 ) : (
-                  <div className="flex-1 overflow-y-auto bg-white">
+                  <div className="flex-1 overflow-y-auto bg-white mb-24">
                     {/* おかわりブロック（サイドバーに "おかわり" があるとき） */}
                     {currentSidebarCategories.includes('おかわり') && (
                       <MainCategoryBlock
