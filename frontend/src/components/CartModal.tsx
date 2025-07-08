@@ -47,7 +47,6 @@ export function CartModal({
                           */}
                           <div>
                             <p className="font-semibold">{item.name}</p>
-                            <p className="text-sm text-gray-500">{item.selectedSize.label}</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
