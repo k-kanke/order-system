@@ -41,10 +41,10 @@ export function MainCategoryBlock({
                 {/* おかわり表示（カテゴリが "おかわり" のときだけ） */}
                 {category.name === 'おかわり' && (
                     <>
-                        <h3 className="flex text-2xl items-center font-bold px-2 mb-2">
+                        <h3 className="flex text-2xl font-extrabold text-gray-900 items-center px-2 mt-2 mb-2">
                             おかわり
                             <span className="flex-grow ml-2 border-t border-dashed border-gray-300"/>
-                        </h3>
+                        </h3> 
                         
                         <div className="grid grid-cols-2 gap-4">
                             {category.children.flatMap(sub =>
