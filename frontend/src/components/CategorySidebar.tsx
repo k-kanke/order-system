@@ -16,6 +16,7 @@ export function CategorySidebar({ selected, onChange, categories }: CategorySide
                 backgroundColor: '#f8f8f8', 
                 // paddingTop: '5px',
                 overflowY: 'auto',
+                height: '100%',
             }}
             className="shadow-md"
         >
