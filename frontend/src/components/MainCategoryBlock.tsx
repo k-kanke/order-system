@@ -55,7 +55,9 @@ export function MainCategoryBlock({
                                         return matched;
                                     })
                                     .map(menu => {
-                                        // onsole.log(`[debug] rendering menu.name="${menu.name}"`);
+                                        // image_url 取得する
+                                        const image_url = menu.products.find((p) => p.url && p.url.trim() !== "")?.url || "/placeholder.jpg";
+
                                         return (
                                             <div
                                                 key={`reorder-${menu.id}`}
@@ -63,9 +65,9 @@ export function MainCategoryBlock({
                                                 onClick={() => setSelectedMenuCategory(menu)}
                                             >
                                                 <img
-                                                    src="/placeholder.jpg"
+                                                    src={image_url}
                                                     className="w-full h-32 object-cover"
-                                                    // alt={menu.name}
+                                                    // alt={menu.name}  
                                                 />
                                                 <div className="text-start shadow-md p-2 rounded text-xs font-semibold min-h-[2rem] flex items-center justify-start">
                                                     {menu.name}
