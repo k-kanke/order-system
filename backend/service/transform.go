@@ -1,6 +1,8 @@
 package service
 
 import (
+	"log"
+
 	"github.com/k-kanke/order-system/model"
 )
 
@@ -39,6 +41,8 @@ func ConvertToOutputProducts(products []model.Product) []model.OutputProduct {
 		url := ""
 		if p.URL != nil {
 			url = *p.URL
+			// debug
+			log.Println("[debug] URL:", url)
 		}
 
 		result = append(result, model.OutputProduct{
