@@ -30,21 +30,6 @@ export function CartModal({
                     >
                       <div className="flex justify-between items-center mb-1">
                         <div className="flex items-start gap-2">
-                          {/*
-                          <button
-                            onClick={() => onRemove(item.id, item.selectedSize.label)}
-                            className=" text-black text-sm hidden group-hover:block"
-                            style={{
-                              backgroundColor: 'transparent',
-                              border: 'none',
-                              padding: 0,
-                              lineHeight: 1,
-                            }}
-                            aria-label="削除"
-                          >
-                            ✕
-                          </button>
-                          */}
                           <div>
                             <p className="font-semibold">{item.name}</p>
                           </div>
@@ -54,7 +39,6 @@ export function CartModal({
                             onClick={() => {      
                               onDecrease(item.id, item.selectedSize.label)
                             }}
-                            // disabled={item.count === 1}
                             className={"px-2 py-1 rounded bg-gray-200 hover:bg-gray-300"}
                           >
                             −
