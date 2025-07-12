@@ -23,6 +23,7 @@ func SetupRouter() *gin.Engine {
 		api.GET("/products", controller.GetProducts)
 		api.GET("/categories", controller.GetCategories)
 		api.GET("/menu", controller.GetMenu)
+		api.GET("/order-history", controller.GetOrderHistory) // Supabaseから注文履歴を取得
 	}
 
 	return r
