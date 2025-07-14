@@ -28,6 +28,7 @@ export function HomePage() {
     const [manualHighlight, setManualHighlight] = useState(true);
     // const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
+    // trueの時、タブにおかわりが表示される
     const [hasDrinkOrder, setHasDrinkOrder] = useState(false);
     const [hasFoodOrder, setHasFoodOrder] = useState(false);
 
@@ -123,13 +124,13 @@ export function HomePage() {
         const { categories } = json;
 
         // debug
-        console.log("[debug] categories: ", categories)
+        // console.log("[debug] categories: ", categories)
         setCategories(categories)
 
         const transformedMenu = flattenCategories(categories);
 
         // debug
-        console.log("[debug] transformedMenu: ", transformedMenu)
+        // console.log("[debug] transformedMenu: ", transformedMenu)
 
         // setMenuItems(transformedMenu); 
       }
@@ -279,14 +280,40 @@ export function HomePage() {
       setCart(prev => prev.filter(item => !(item.id === id && item.selectedSize.label === sizeLabel)))
     }
  
-    const handleOrder = () => {
-        // 注文履歴に一回一回のオーダー単位で追加
-        setOrderHistory(prev => [[...cart], ...prev]);
+    const handleOrder = async() => {
+      if (cart.length === 0) {
+        alert("カートが空です");
+        return;
+      }
 
-        // debug
-        // console.log("[debug] cart:", cart)
+      try {
+        // 1. 注文登録APIへカート内容を送信
+        const res = await fetch("http://localhost:8080/api/order", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            tableId: 1, 
+            items: cart.map(item => ({
+              productId: item.id,
+              productName: item.name,
+              price: item.selectedSize.price,
+              quantity: item.count,
+              sizeLabel: item.selectedSize.label,
+              category: item.category,
+              subCategory: item.subCategory,
+            })),
+          }),
+        });
+        
+    
+        if (!res.ok) throw new Error("注文登録に失敗しました");
+    
+        // 2. 登録成功したら注文履歴を再取得してstate更新
+        const historyRes = await fetch(`http://localhost:8080/api/order-history?tableId=テーブルIDをセット`);
+        const historyData = await historyRes.json();
+        setOrderHistory(historyData.orders); // API返却の注文履歴データに合わせて調整
 
-        // カートにドリンクがあれば「おかわり」タブを表示
+        // カートにドリンクorフードがあればそれぞれ「おかわり」タブを表示
         if (cart.some(item => item.category === 'ドリンク')) {
           setHasDrinkOrder(true);
         }
@@ -294,10 +321,39 @@ export function HomePage() {
         if (cart.some(item => item.category === 'フード')) {
           setHasFoodOrder(true);
         }
-
+    
+        // 3. カートクリア＆モーダル閉じる
         setCart([]);
         setIsCartOpen(false);
         alert("注文が確定しました！");
+    
+      } catch (error) {
+        alert(error || "注文処理中にエラーが発生しました");
+      }
+
+      {/*　開発環境における注文履歴処理
+      // 注文履歴に一回一回のオーダー単位で追加
+      setOrderHistory(prev => [[...cart], ...prev]);
+
+      // debug
+      // console.log("[debug] cart:", cart)
+
+      // カートにドリンクがあれば「おかわり」タブを表示
+      if (cart.some(item => item.category === 'ドリンク')) {
+        setHasDrinkOrder(true);
+      }
+
+      if (cart.some(item => item.category === 'フード')) {
+        setHasFoodOrder(true);
+      }
+
+      // debug
+      console.log("[debug] cart: ", cart)
+
+      setCart([]);
+      setIsCartOpen(false);
+      alert("注文が確定しました！");
+      */}
     };
 
 
