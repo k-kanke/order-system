@@ -10,6 +10,7 @@ import (
 )
 
 func main() {
+	// Load environment variables
 	config.LoadEnv()
 
 	if err := db.Init(); err != nil {
