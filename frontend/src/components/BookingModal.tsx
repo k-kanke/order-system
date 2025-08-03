@@ -14,11 +14,11 @@ export function BookingModal({ room, onClose }: BookingModalProps) {
       left: 0,
       right: 0,
       bottom: 0,
-      backgroundColor: 'rgba(0, 0, 0, 0.7)', // モーダル背景
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      zIndex: 10000, // 他の要素より手前に
+      zIndex: 10000,
     }}>
       <div style={{
         backgroundColor: 'white',
